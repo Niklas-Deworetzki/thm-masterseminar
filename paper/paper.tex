@@ -1,0 +1,148 @@
+% ----------------------------------------------------------------------------
+% Masterseminar
+% ----------------------------------------------------------------------------
+\documentclass[english]{scrarticle}
+
+% =======================================================
+\newcommand{\MyName}{Niklas Deworetzki}      % Name
+\newcommand{\MyTitle}{MS5001~--~Masters Seminar}
+\newcommand{\MyTopic}{Using Partial Evaluation to Generate Compilers}
+% =======================================================
+
+\usepackage[ngerman,main=english]{babel}
+\usepackage[babel]{csquotes}         % Anführungszeichen
+
+\usepackage[T1]{fontenc}             % Umlaute und Sonderzeichen
+\usepackage[utf8]{inputenc}          % für Eingabe und Ausgabe
+\usepackage{scrhack}                 % unterdrückt Fehlermeldung von listings
+
+\usepackage{amsmath}                 % Mathematik
+\usepackage{amssymb}                 % Mathematische Symbole
+\usepackage{stmaryrd}
+\usepackage{graphicx}                % Grafiken
+\graphicspath{{images/}}             % Bilder werden aus images geladen
+\usepackage{longtable}               % Mehrseitige Tabellen
+\usepackage{wrapfig}                 % Text neben Figuren
+\usepackage{multicol}                % Mehrteilige Seiten
+
+% Formatierungen für Grafiken und Elemente.
+\usepackage[export]{adjustbox}
+\usepackage[a4paper]{geometry}
+\usepackage[titles,subfigure]{tocloft}
+\usepackage{float}
+
+% Formatierungen für Text, Überschriften, Inhaltsverzeichnis, etc.
+\usepackage{fancyhdr}
+\usepackage{tocbibind}
+\usepackage{blindtext}
+
+\usepackage[%
+      rm={oldstyle=false,proportional=true},%
+      sf={oldstyle=false,proportional=true},%
+      tt={oldstyle=false,proportional=true,variable=false},%
+      qt=false%
+    ]{cfr-lm}
+
+\usepackage[pdftex,
+pdfauthor={\MyName{}},
+pdftitle={\MyTitle{}~--~\MyTopic{}}]{hyperref}
+
+% BibLatex configuration
+\usepackage[backend=bibtex]{biblatex}
+\usepackage[toc,acronyms]{glossaries}
+\bibliography{bibliography.bib}     % Pfad zur Datei, die Referenzen enthält
+
+% Verschiedene Grafiken, Figuren, Listings
+\usepackage[table]{xcolor} % Definiere eigene Farben
+\usepackage{textcomp}      % Sonderzeichen (für Operatoren in Code, z.B.)
+\usepackage{subfigure}     % Teilfiguren
+\usepackage{filecontents}  % Lade Dateien (für Codebeispiele)
+\usepackage{listingsutf8}  % Codeblöcke mit UTF-8 (Umlaute)
+\usepackage{lstautogobble} % Entfernt führende Leerzeichen in Codeblöcken
+% lstautogobble=false zum deaktivieren für einzelne Codeblöcke
+
+% Grafikbibliothek zum Erstellen eigener Diagramme
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing,shapes,arrows,positioning}
+
+
+%------------------------------------------------------------------------------
+% THM Farbdefinitionen
+\definecolor{cdmain1}{RGB}{128, 186, 36}
+\definecolor{cdmain2}{RGB}{74, 92, 102}
+\definecolor{cdhighlight1}{RGB}{156, 19, 46}
+\definecolor{cdhighlight2}{RGB}{244, 170, 0}
+\definecolor{cdhighlight3}{RGB}{0, 184, 228}
+\definecolor{cdhighlight4}{RGB}{0, 40, 120}
+%------------------------------------------------------------------------------
+\colorlet{fontcolor}{cdmain2}
+\colorlet{headercolor}{cdmain1}
+%------------------------------------------------------------------------------
+% Schrift für Fußnoten
+\renewcommand{\footnotesize}{\fontsize{10pt}{12pt}\selectfont}
+%------------------------------------------------------------------------------
+% Format für Tabellen
+\newcommand\HeaderCell[1]{%
+  \multicolumn{1}{c}{\cellcolor{cdmain2}\textcolor{white}{#1}}
+}
+%------------------------------------------------------------------------------
+% Farbdefinitionen für Codeblöcke
+\colorlet{codecomment}{cdmain1}
+\colorlet{codenormal}{cdmain2}
+\colorlet{codelblue}{cdhighlight3}
+\colorlet{codekeyword}{cdhighlight1}
+\definecolor{backcolor}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+  backgroundcolor=\color{backcolor},
+  commentstyle=\color{codecomment},
+  keywordstyle=\color{codekeyword},
+  numberstyle=\tiny\color{codenormal},
+  stringstyle=\color{codelblue},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  frame=single
+}
+\lstset{style=codestyle}
+
+\include{glossary}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+% Zeilenumbrüche in Links
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\-\do\\/}
+% Zeilenumbrüche bei Unterstrichen (in langen Variablennamen)
+\renewcommand\_{\textunderscore\allowbreak}
+
+% ------------------------------------------------------------------------------
+
+%==============================================================================
+\begin{document}
+
+\title{\MyTopic{}}
+
+\author{\MyName{}}
+\maketitle
+
+
+
+\input{chapters/1-intro.tex}
+\input{chapters/2-partial-evaluation.tex}
+\input{chapters/3-multistage-computing.tex}
+\input{chapters/4-futamura.tex}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

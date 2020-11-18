@@ -1,0 +1,36 @@
+
+\section{Multistage Computations}\label{sec:multistage}
+
+When solving computational problems, the required calculations can be performed either in a single computational stage, or can be separated into multiple stages.
+This is especially obvious when working with compiled languages, since they require the help of a compiler to generate executable program code, that is able to perform calculations.
+Since multistage computations will be a recurring theme in the following sections, we now introduce a notation to reason about it in a formal way. This notation was adopted from . % TODO
+
+Given a program to solve an arbitrary computational program, this program is defined by its source code written in a language \textit{S}.
+Applying this program to an input will produce an output by performing the computations described in the program.
+
+% TODO: Improve typesetting of equations?
+\begin{align*}
+  \mathtt{output}\ &=\ \llbracket \mathtt{source} \rrbracket_{\mathtt{S}}\ \mathtt{input}
+\end{align*}
+
+Since a programming language \textit{S} usually cannot be executed directly by the underlying hardware, we can use an interpreter written in another language \textit{L} to perform the calculations.
+This interpreter then accepts the source program as well as the original input to produce an output.
+
+\begin{align*}
+  \mathtt{output}\ &=\ \llbracket \mathtt{interpreter} \rrbracket_{\mathtt{L}}\ [\mathtt{source}, \mathtt{input}]
+\end{align*}
+
+Alternatively a compiler can be used, that first accepts the source program to produce a target program, which then can be applied to the original input.
+
+\begin{align*}
+  \mathtt{output}\ &=\ \llbracket \llbracket \mathtt{compiler} \rrbracket_{\mathtt{L}}\ \mathtt{source} \rrbracket_{\mathtt{T}}\ \mathtt{input} \\
+  &=\ \llbracket \mathtt{target} \rrbracket_{\mathtt{T}}\ \mathtt{input}
+\end{align*}
+
+The nested brackets make it obvious, that multiple stages of computation are present. % TODO
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End:
