@@ -1,7 +1,56 @@
 
 \section{Introduction}\label{sec:introduction}
 
+Partial evaluation is a technique to specialize programs or functions to their given input.
+This specialization appears to be similar to currying or partial application, that is known in programming.
+A partial evaluator however, does not simply fix one input parameter of a function, but propagates this fixing through the whole program text.
+% TODO
 
+\subsection{Interpreter}
+
+An interpreter can be used to evaluate computations from a source program.
+When executing an interpreter, the source program is given as an input to the interpreter.
+The interpreter will then analyze the source program and compute its output, given an input for the source program.
+
+To fully evaluate the computations from the source programs, all of its inputs have to be known by the interpreter.
+
+
+\subsection{Compiler}
+
+Similarly to an interpreter, a compiler can be used to evaluate computations from a source program.
+To execute a compiler, the source program has to be given as an input to the compiler.
+The compiler will then analyze the source program and generate a target program which contains equivalent computations to the original source program.
+
+The target program generated is usually in some kind of low-level language, that can be executed directly by a machine.
+In this way the target program can be executed, whereby its input has to be specified.
+The compiler itself does not need to know about the source or target programs inputs.
+
+
+\subsection{Partial Evaluator}
+
+A partial evaluator can be thought of as an hybrid between compiler and interpreter.
+Similarly to an interpreter, a partial evaluator will evaluate the given program text and will perform computations as they become available by fixing input parameters, just like an interpreter would do.
+On the other hand, it is not possible to perform all computations inside the evaluator, since the input is only partially fixed and some of it remains unknown.
+In these cases, a residual program is generated, representing the deferred computations and the partial evaluator acts more like a compiler.
+
+From this mental image of an partial evaluator as some kind of mix between compiler and interpreter, two variants of partial evaluators emerged.
+
+\begin{itemize}
+\item
+  \textbf{Offline} partial evaluation is guided by an analysis of the source code, where computations are either annotated as \textit{static} or \textit{dynamic}.
+  During specialization the computations annotated as static are then performed, while the residual program generated holds all remaining computations marked as dynamic. \citationneeded[The Generation of a Higher-Order Online Partial Evaluator]
+
+\item
+  \textbf{Online} partial evaluation on the other hand perform specialization on the fly.
+  The partial evaluator steps through the source program and found static values are propagated through the program, while computations relying on dynamic input are generated as the residual program.~\cite{Ruf_OnlinePartialEval, Cook_TutorialOnlinePartialEvaluation}
+\end{itemize}
+
+Contrary to the early theoretical roots of partial evaluation \citationneeded[], new concerns arose when implementing partial evaluators and using them for program specialization.
+While it is possible to construct a specialized program, that is slower than the original unspecialized one, it is of little relevance in the real world.
+Rather it is more attractive to use the additional information from specialization to speed up deferred computations.
+Used this way, partial evaluators can be used to optimize programs in a way that is similar to optimization techniques implemented in an optimizing compiler.
+
+As we will see in later sections, a partial evaluator can not only be used to optimize programs like a compiler would do, but can even be used to generate a complete compiler.
 
 %%% Local Variables:
 %%% mode: latex
