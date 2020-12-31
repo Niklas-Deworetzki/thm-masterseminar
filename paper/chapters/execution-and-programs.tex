@@ -1,0 +1,120 @@
+
+\section{Execution of Programs}\label{chap:programs}
+
+Computational Problems can be solved with Programs.
+Programs are written in programming language.
+Can be executed to perform computations.
+Programs accept input and produce output; solution to problem
+Variable inputs creates complex program, allows multiple outputs, automatically solving.
+
+\begin{figure}
+  \centering
+  
+  \caption{Direct execution of a program}\label{fig:native-program}
+\end{figure}
+
+\ref{fig:native-program} shows schematic representation of execution of program.
+Notation is used during first chapter to separate data, programs and execution.
+
+Computer must be able to execute language.
+Abstract programs, or algorithms don't have this problem, since human acts as computer.
+On real hardware, execution is limited.
+Machine instructions are efficient and executable.
+Are not easy to write, not portable, etc.
+Higher languages provided easier use, but cannot execute directly.
+It is possible to transform a program in language, to execute it.
+
+Transformation can be done by a human, tedious as well.
+Execution or transformation of program is computational problem
+=> Program can be used to automate.
+
+Programs that accept programs are meta-programs.
+Technique called meta programming.
+Different kinds of these programs:
+
+
+
+\subsection{Interpreters}
+
+Interpreter can execute program, usually higher language.
+Accept program as input, analyze and produce intermediate representation:
+AST representing structure and content of program.
+AST has nodes, expressions, assignments, etc.
+Interpreter assigns meaning to these nodes
+Traversal of nodes, by executing meaning, equals execution of program.
+
+Given interpreter can be executed, program can be executed too.
+Interpreter accepts source program and input to program as data.
+produces output.
+Interpreter executes program directly, like native program: single stage of computation
+
+Advantage of interpreter: easy to write.
+Less performance, overhead of interpretation, shares resources.
+
+\begin{figure}
+  \centering
+  
+  \caption{An interpreter executing a program}\label{fig:interpreted-program}
+\end{figure}
+
+
+\subsection{Compilers}
+
+Compilers can execute programs too.
+Accept program as input, analyze and produce intermediate representation.
+Assigned meaning to nodes is not executed, is transformed into code.
+
+Compiler accepts source program and produces target program.
+Target program can be executed directly, accepting input and producing output.
+As seen in \ref{fig:compiled-program} computation is split into two stages.
+
+Visually seems like disadvantage, since both languages need execute (target and compiler)
+Praxis not a problem usually.
+Advantage is removal of overhead.
+Execution fast, especially if executed multiple times.
+Are harder to write, since programmer needs to think more (two languages, two execution stages).
+
+\begin{figure}
+  \centering
+  
+  \caption{A compiler generating an executable target program}\label{fig:compiled-program}
+\end{figure}
+
+
+
+\subsection{Partial Evaluators}
+
+Partial evaluator generalizes concept of splitting computational stages.
+Accepts program as input as well as inputs for program itself.
+Performs computations that are available under partial input and deferres other computations.
+
+On a high level working is similar to compiler and interpreter.
+Program as input, analyzed and intermediate representation.
+Instead of executing all, only parts are executed while the residue is generated.
+The generated program is called residue program.
+
+From this scheme, partial evaluator is mix between interpreter and compiler.
+Sometimes called mix in literature.
+
+\begin{figure}
+  \centering
+  
+  \caption{A partial evaluator generating a residual program}\label{fig:partial-evaluated-program}
+\end{figure}
+
+While \ref{fig:partial-evaluated-program} is similar to \ref{fig:compiled-program} describing compiler, concept is generalized.
+Compiler splits overhead of analyzing and computation in different stages.
+Partial evaluator can split calculations depending on any input in different stages.
+A general program, accepting multiple inputs can be specialized to a fixed input.
+Allows higher performance, since decisions depending on input are removed.
+
+Coming from initial description of programs.
+General problem solver can be fixed on problems.
+Other Examples are: Ray tracing, web servers, config files in general.
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End:

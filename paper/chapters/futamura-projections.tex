@@ -1,0 +1,92 @@
+
+\section{The Futamura-Projections}\label{sec:futamura}
+
+Until now, PE was only used as a way to specialize programs.
+As seen, specialized program does not have new properties.
+Only reduction of general programs, simplifying their structure, optimizing runtime by removing expressions.
+
+Futamura proposed three projections, showing that PE can seemingly create new functionality.
+Programs with different properties appear through specialization.
+Clever use of interpreters and the way PEs work.
+
+Firstly a new notation is used to simplify his findings.
+Notation shows evaluation as equations.
+
+\subsection{Notation of Multistage Computations}\label{sec:multistage-notation}
+
+As seen before, computations can be split into multiple stages.
+
+Program of language S can be executed directly, accepting input and generating output if S is executable.
+Interpreter can also be used to perform computations.
+
+Another example: Compiler splitting two stages of computation.
+Two nested brackets in equation.
+
+Partial Evaluator works similarly, introducing two nested brackets.
+
+
+\subsection{The First Futamura Projection}\label{sec:futamura-first}
+
+The first projection is based on a fact, visible before but not directly emphasized.
+During multistage computation and intro on execution we see, interpreters accept two inputs.
+First input: The executed program.
+Second input: The input to the executed program.
+
+Usually two are passed in at once, PE can be used to create multiple stages of computation.
+Interpreter is specialized to program, input remains variable.
+
+Resulting residual program accepts the input of the program and produces output of program corresponding to input.
+Residual program is compiled program.
+PE and interpreter acted like compiler.
+
+
+\subsection{The Second Futamura Projection}\label{sec:futamura-second}
+
+Looking at previous projection, it can be seen that a program is applied to two inputs at once.
+PE accepts interpreter and source program.
+The second projection deals with this case and shows what happens if input is separated.
+
+PE is used to specialize PE on interpreter.
+Source program remains variable.
+
+Residual program accepts a source program to create target program.
+Residual program acts as compiler.
+PE and interpreter acted like compiler compiler.
+
+
+\subsection{The Third Futamura Projection}\label{sec:futamura-thrid}
+
+Again, looking at previous projection, program is applied to two inputs at once.
+PE accepts PE and interpreter.
+The third projections deals with this case and shows what happens if input is separated.
+
+PE is used to specialize PE on PE.
+Interpreter remains variable.
+
+Residual program accepts an interpreter, to create a program.
+This program then accepts source to generate target.
+Residual program acts as compiler compiler.
+PE and PE acted like compiler compiler compiler, requiring only PEs.
+Interpreter determines how compiler acts.
+
+
+\subsection{Is there a Fourth Futamura Projection?}\label{sec:futamura-fourth}
+
+Equation now only consists of PEs.
+While additional is possible, it does not seem to change equation itself.
+
+
+\subsection{Going Further}\label{sec:self-application}
+
+No new functionality seems to be yield.
+Its still desirable to further specialize.
+
+Multiple ways to create program are equal on a theoretical level, shown in equations.
+Practical differences in generated real code.
+As shown, performance gains.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End:

@@ -30,4 +30,16 @@
   month       = apr,
 }
 
+@Book{Grune_ModernCompilerDesign,
+  author    = {Grune, D. and van Reeuwijk, K. and Bal, H. E. and Jacobs, C. J. H. and Langendoen, K.},
+  publisher = {Springer},
+  title     = {Modern Compiler Design},
+  year      = {2012},
+  edition   = {2},
+  isbn      = {978-1-4614-4698-9},
+  month     = jul,
+  date      = {2012-07-02},
+  pagetotal = {844},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}

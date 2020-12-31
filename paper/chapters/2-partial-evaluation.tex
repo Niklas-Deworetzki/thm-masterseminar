@@ -1,6 +1,40 @@
 
 \section{Instruments of Partial Evaluation}\label{sec:instruments}
 
+In this section we will look into the inner workings of a partial evaluator.
+More concrete, this section shows the different methods that can be used by a partial evaluator to specialize programs and what effect they have on real-world examples.
+
+The main goal of an partial evaluator is to evaluate all computations that can be evaluated statically given parts of the programs input.
+But how can the partial evaluator decide, which computations can be evaluated statically and for which a residual program has to be generated?
+Naturally some kind of analysis is performed on the source program, deciding what computations can be performed.
+In~\cite[S.3]{Jones_PartialEvaluation}~three main techniques are presented, that can be used to specialize a program:
+
+\begin{enumerate}
+\item Symbolic computation
+\item Unfolding of function calls and
+\item program point specialization.
+\end{enumerate}
+
+In the following, these three techniques are explained individually and examples are given for each one.
+% TODO: Optimization where?
+
+
+\subsection{Unfolding of function calls}
+
+% TODO: Can be used to propagate known values.
+
+
+\subsection{Symbolic Computation}
+
+The term \enquote{symbolic computation} is a broad term but can be described by arithmetic or algebraic simplifications in regards to partial evaluation.
+
+
+\citationneeded[Jones 132]
+
+
+\subsection{Program point specialization}
+
+
 
 
 %%% Local Variables:

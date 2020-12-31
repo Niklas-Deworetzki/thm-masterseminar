@@ -1,0 +1,92 @@
+
+\section{Partial Evaluation}\label{sec:partial-evaluation}
+
+Overview of inner workings of partial evaluators.
+Already covered: PE accepts a source program as input and additionally inputs for the source program itself.
+Source program is analyzed and structured, to allow for later transformation
+Section explains different variants of PEs and how they decide their ``targets'' (computable stuff)
+Afterwards different methods/tools/intruments of evaluations are explained.
+
+
+\subsection{Offline and Online Partial Evaluation}\label{sec:offline-vs-online}
+
+Two main variants on partial evaluators.
+Both act on the structured source program as input data.
+Both require some known input data for the source.
+Difference is in how computations are decided.
+
+To decide what to compute: Static vs. Dynamic.
+Static means (similar to compiler), that it depends on fixed values\citationneeded[Does it?]
+Since PE knows input for program, it can find static computations
+All static computations can be performed by PE.
+Dynamic computations are generated for runtime.
+
+The decision of static vs dynamic is called division.
+Every part of program has to recognized either static or dynamic.
+How this division is made is different in the two main variants \citationneeded[A Hybrid Approach to Online and Offline Partial Evaluation].
+
+
+Offline makes decision before specialization in a preprocessing phase called bindingtime analysis(BTA).
+Conservative as everything is treated dynamic until proven static.
+Annotates program \citationneeded[Jones, Chap 7] without knowing concrete values of static input.
+Then transforms input.
+
+Online makes decision during specialization with the value of a static input.
+Is more complex, since binding time analysis is not factored out as separate preprocessing step.
+Harder to predict speedup, difficult to self application or guarantee termination.
+Traverses source code deciding on the fly, if static or dynamic.
+Can use the actual values of input to perform decision, but may encounter same code multiple times.
+
+
+\subsection{Instruments of Partial Evaluation}\label{sec:pe-instruments}
+
+Overview what techniques are available for PE to compute static.
+Mainly PE is based on the propagation of static values.
+Since it allows to unlock more computations.
+
+Constant propagation (sparse constant propagation).
+constants (input) are known and computed.
+Expressions depending on constants can be computed too.
+Also conditions -> control flow is decided statically.
+Allows to cut off unused paths in code, perform many calculations.
+
+\begin{lstlisting}
+  x := 2, n := 8
+  def power(int n, int x) {
+    int result = 1;
+    while (n > 1) {
+      result = result * x;
+    }
+  }
+\end{lstlisting}
+
+
+Unfolding (of function calls)
+Allows to propagate constants into called procedures.
+Or unroll loops into a sequence of computations.
+
+\begin{lstlisting}
+  def power(int n, int x) {
+    if (n == 0) {
+      return 1;
+    } else {
+      return x * power(n - 1, x);
+    }
+  }
+\end{lstlisting}
+
+
+symbolic computation
+Uses statically known structure of expressions to deduce simplifications.
+E.g mathematic simplicitations based on structure or mathematic identities.
+
+\begin{lstlisting}
+  2 << n
+\end{lstlisting}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End:
