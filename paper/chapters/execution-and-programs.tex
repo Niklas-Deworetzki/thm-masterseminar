@@ -1,11 +1,16 @@
 
 \section{Execution of Programs}\label{chap:programs}
 
-Computational Problems can be solved with Programs.
-Programs are written in programming language.
-Can be executed to perform computations.
-Programs accept input and produce output; solution to problem
-Variable inputs creates complex program, allows multiple outputs, automatically solving.
+In computer science, we use algorithms to describe, how computational problems can be solved.
+Building on decades of research, we can often determine which computational problems are solvable and can even categorize them depending on different strengths of the problem\citationneeded[].
+While this is a great success for the field of computer science, the effect of algorithms on the real world is rather limited.
+Since algorithms describe abstract rules on how to structure and solve a program, a rather abstract computational framework is required to execute them.
+Consequently the \enquote{computer} executing an algorithm in its pure form, is usually a human being.
+
+In order to use the capabilities of modern computers, which can perform billions of calculations per second and are therefore much better suited to automatically processing large data sets, algorithms need to be transformed in a more practical notation.
+The description of an algorithm in a concrete programming language is called program.
+Additionally to the description of an algorithm, a program written in a programming language also describes mechanisms to read an input (parameters to the computational problem) and produce an output (the solution to the problem).
+This way solving a computational is now a matter of executing the program.
 
 \begin{figure}
   \centering
@@ -13,40 +18,43 @@ Variable inputs creates complex program, allows multiple outputs, automatically 
   \caption{Direct execution of a program}\label{fig:native-program}
 \end{figure}
 
-\ref{fig:native-program} shows schematic representation of execution of program.
-Notation is used during first chapter to separate data, programs and execution.
+Figure~\ref{fig:native-program} shows a schematic representation of a program and its execution. % TODO: Explain notation.
+As can be seen, a program may accept many inputs, allowing it to handle as many cases of the computational problem and producing (hopefully) correct solutions as an output.
+Naturally with the capability of reading, distinguishing and validating different inputs, the complexity of a program grows.
+But as figure~\ref{fig:native-program} also shows, the execution of the program represents a single computational step regardless of the programs complexity or the required resources.
 
-Computer must be able to execute language.
-Abstract programs, or algorithms don't have this problem, since human acts as computer.
-On real hardware, execution is limited.
-Machine instructions are efficient and executable.
-Are not easy to write, not portable, etc.
-Higher languages provided easier use, but cannot execute directly.
-It is possible to transform a program in language, to execute it.
+In order to execute a program, a computer must be able to understand the language it is written in.
+Machine instructions are the only language, a modern computer is truly able to execute.
+While these instructions are efficient and executable by the computer, they are not made for humans.
+Thus a program written directly in machine instructions is usually not easy to write, easy to maintain or easy to understand.
+Higher programming languages are available, which provide easier usage and a simpler description of programs.
+These higher languages however are not executable by the hardware directly and programs written in a higher language have to be transformed into machine instructions, to be executed.
 
-Transformation can be done by a human, tedious as well.
-Execution or transformation of program is computational problem
-=> Program can be used to automate.
-
-Programs that accept programs are meta-programs.
-Technique called meta programming.
-Different kinds of these programs:
-
+Naturally this transformation can be done by a human being, although this task is very tedious.
+The transformation of programs is however a computational problem itself.
+Consequently programs can be used to automate this task.
+These programs, that accept programs as their input, are so-called meta programs.
+In this paper, three different variants of meta-programs are relevant as they show different ways of how this transformation can be done and how the execution of a program can be achieved. % TODO: Hook for next sections.
 
 
 \subsection{Interpreters}
 
-Interpreter can execute program, usually higher language.
-Accept program as input, analyze and produce intermediate representation:
-AST representing structure and content of program.
-AST has nodes, expressions, assignments, etc.
-Interpreter assigns meaning to these nodes
-Traversal of nodes, by executing meaning, equals execution of program.
+% TODO: Language of the interpreter.
+Interpreters are meta programs, that execute other programs.
+The input of an interpreter is a program, that is then analyzed and usually transformed into a intermediate representation.
+This intermediate representation---the abstract syntax tree---represents the structure and contents of the program as a tree of nodes.
+The nodes represent different expressions, statements and other language constructs present in the source program and their relation to each other forms a tree structure.
+By assigning a meaning to these nodes, a program becomes executable.
+The traversal of nodes, while performing actions according to the meaning of the traversed nodes, is equivalent to the execution of the program.
 
 Given interpreter can be executed, program can be executed too.
-Interpreter accepts source program and input to program as data.
-produces output.
-Interpreter executes program directly, like native program: single stage of computation
+The way an interpreter accepts input and produces output is very similar to the native execution of an program as seen in the previous section. % TODO: Reference section.
+Additionally to the programs inputs, an interpreter accepts the program itself as input and executes it.
+The output produced by an interpreter is the output the program itself would produce, given the same input.
+Figure~\ref{fig:interpreted-program} shows that the execution via an interpreter is similar to the native execution of a program, in the chosen way to represent execution.
+
+Atomic execution step, just accepting one more input.
+
 
 Advantage of interpreter: easy to write.
 Less performance, overhead of interpretation, shares resources.
@@ -60,19 +68,22 @@ Less performance, overhead of interpretation, shares resources.
 
 \subsection{Compilers}
 
-Compilers can execute programs too.
-Accept program as input, analyze and produce intermediate representation.
-Assigned meaning to nodes is not executed, is transformed into code.
+Compilers, similar to interpreters, are programs that are used to transform other programs.
+The way of working even is similar, as compilers also accept a program as input, analyze this input and usually transform it into an intermediate representation.
+The difference between a compiler and an interpreter is, that the meaning of the input program is not directly executed.
+Rather, a compiler translates the meaning of its input into another language and produces an output program with the same meaning as the input program, just written in another language.
 
-Compiler accepts source program and produces target program.
-Target program can be executed directly, accepting input and producing output.
-As seen in \ref{fig:compiled-program} computation is split into two stages.
+This so-called target program is the single output of a compiler.
+A compiler does not accept any of the input intended for the source program.
+A compiler also does not produce any output, the source program would produce.
+As seen in figure~\ref{fig:compiled-program}, a compiler splits the execution into two computational stages this way, since the target program has to be executed, accepting input and producing output.
 
-Visually seems like disadvantage, since both languages need execute (target and compiler)
-Praxis not a problem usually.
-Advantage is removal of overhead.
-Execution fast, especially if executed multiple times.
-Are harder to write, since programmer needs to think more (two languages, two execution stages).
+Visually in this figure, this seems like a disadvantage, since now multiple languages need to be executable in order to execute the source program.
+In practice this is usually not a problem.
+More importantly, an advantage arises since the overhead of analyzing the input program is removed from the generated target program.
+If the target program can now be executed directly, the execution is usually efficient.
+This is especially true, if the target program is going to be executed multiple times, since the overhead of analyzing the source program is only done once during compilation, while an interpreter would need to analyze the program every time it is executed.
+On the other hand, compilers are harder to develop, since multiple languages and execution stages have to be taken into account.
 
 \begin{figure}
   \centering

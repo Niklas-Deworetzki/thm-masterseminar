@@ -1,0 +1,37 @@
+
+\section{Introduction}\label{sec:introduction}
+
+PE captures many forms of automated generation and analysis of programs.
+optimization, interpretation and automatic generation, as compilers or more general program generators.
+
+Base use case is to specialize programs.
+Specialization similar to currying (Logic, FP) or projection (mathematics).
+Idea behind this concepts is to reduce a many argument function to single argument function, by fixing parameters.
+Specialization yields same result for programs, that accept many inputs.
+Some parts of input are known statically, specialization generates program requiring remaining inputs.
+
+THeoretical base is s-n-m theorem\citationneeded[Kleene].
+Important work computability, no attention to efficiency/speed.
+In computation/praxis, intuitively specialized programs can be faster.
+Aim for practical specialization.
+
+\subsection{Terminology}
+
+Program performing PE is called PE or specializer.
+Sometimes called Mix, since mixes computation (see chapter 2).
+Also mixes languages, implementation language, source language, target language, as seen later.
+Not explicitly mentioned, language is not relevant. Useful to keep in mind, that boundaries exist.
+Sometimes not clear with terminology, since PE specializes programs and not just simple functions.
+Since single functions can be turned into programs, terminology might change with context of explanation.
+Another point: Programs and computability are intertwined, we assume programs always halt for simplicity, unless noted.
+Must be considered, when implementing or real world application.
+
+\subsection{Structure of this paper}
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End:
