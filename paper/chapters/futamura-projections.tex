@@ -1,90 +1,157 @@
 
 \section{The Futamura-Projections}\label{sec:futamura}
 
-Until now, PE was only used as a way to specialize programs.
-As seen, specialized program does not have new properties.
-Only reduction of general programs, simplifying their structure, optimizing runtime by removing expressions.
+Until now, partial evaluation was only presented as a tool to specialize and at the same time optimize programs.
+The specialized programs shown did not have any new or interesting properties, except that they were faster than their general counterparts.
 
-Futamura proposed three projections, showing that PE can seemingly create new functionality.
-Programs with different properties appear through specialization.
-Clever use of interpreters and the way PEs work.
+In \citationneeded[] Futamura showed, that it is not only possible to use partial evaluation for specialization of programs or to divide a computation into multiple stages.
+He proposed in total three projections, now known as the Three Futamura Projections, in which partial evaluators create programs with interesting and seemingly new properties.
+In the meantime, these projections have been confirmed multiple times by existing partial evaluators.
+This does not seem surprising, considering that only a partial evaluator and an interpreter is required for the three projections.
 
-Firstly a new notation is used to simplify his findings.
-Notation shows evaluation as equations.
+Next, before elaborating on the projections, a new notation is introduced.
+This notation is used to describe the behavior of programs and computations in multiple stages.
+
 
 \subsection{Notation of Multistage Computations}\label{sec:multistage-notation}
 
-As seen before, computations can be split into multiple stages.
+As seen before, computations can be split into multiple stages, performed by multiple programs, that accept multiple inputs (which themself can be other programs).
+While the notation from Chapter~\ref{chap:programs} might be useful as an visual introduction, it lacks the brevity for more advanced explanations.
+The following equation serves as an example to introduce the new notation:
 
-Program of language S can be executed directly, accepting input and generating output if S is executable.
-Interpreter can also be used to perform computations.
+\begin{align*}
+  \mathtt{output}\ =\
+  \llbracket \mathtt{p} \rrbracket\ (\mathtt{input_1},\, \mathtt{input_2},\, \mathtt{input_3})
+\end{align*}
 
-Another example: Compiler splitting two stages of computation.
-Two nested brackets in equation.
+It shows a simple program called \texttt{p}, that accepts three inputs named \texttt{input\textsubscript{1}} to \texttt{input\textsubscript{3}}.
+The output of this program is aptly named \texttt{output} and (as well as the three inputs) may be data or an executable program.
+The actual execution of \texttt{p} is shown by the square brackets, that simultaneously separate different computational stages.
+This property becomes clear, when the operation of a compiler is described as an equation this way:
 
-Partial Evaluator works similarly, introducing two nested brackets.
+\begin{align*}
+  \mathtt{output}\
+  &=\ \llbracket \mathtt{target} \rrbracket \mathtt{_T}\ (\mathtt{input}) \\
+  &=\ \llbracket \mathtt{source} \rrbracket \mathtt{_S}\ (\mathtt{input}) \\
+  &=\ \left\llbracket \llbracket \mathtt{compiler} \rrbracket \mathtt{_I}\ (\mathtt{source}) \right\rrbracket\mathtt{_T}\ (\mathtt{input})
+\end{align*}
+
+The output produced by executing a target program is the same as if a source program were to be executed directly.
+Also the same output is produced, by compiling the source program and executing the compilers output.
+Two things are important to note here: % TODO: Is it required to show the languages?
+Firstly, the brackets to describe evaluation can be annotated by a subscript, describing the language that is used to determine the meaning of a program.
+The compiler is executed according to the meaning of its implementation language \texttt{I}, while source is a program written in a source language \texttt{S}, that is translated into a target language \texttt{T} by the compiler.
+Additionally it is important to note, what equality means in this context.
+While the output produced by the right-hand sides of this equation is the same, the details of how this output is produced in each case can vary widely.
 
 
 \subsection{The First Futamura Projection}\label{sec:futamura-first}
 
-The first projection is based on a fact, visible before but not directly emphasized.
-During multistage computation and intro on execution we see, interpreters accept two inputs.
-First input: The executed program.
-Second input: The input to the executed program.
+The first of Futamura's projections is based on a fact, that was already shown in this paper but was not directly emphasized.
+As we already know, an interpreter accepts two inputs: A program to execute and the input for this program itself.
+Usually these inputs are passed in at once, resulting in one computational stage.
+But a partial evaluator (\texttt{pe}) could be used to separate these inputs, as shown in the following equation.
 
-Usually two are passed in at once, PE can be used to create multiple stages of computation.
-Interpreter is specialized to program, input remains variable.
+\begin{align}
+  \mathtt{output}\
+  &=\ \llbracket \mathtt{source} \rrbracket \ (\mathtt{input}) \\
+  &=\ \llbracket \mathtt{interpreter} \rrbracket \ (\mathtt{source},\, \mathtt{input}) \\
+  &=\ \llbracket \llbracket \mathtt{pe} \rrbracket \ (\mathtt{interpreter},\, \mathtt{source}) \rrbracket \ (\mathtt{input}) \label{eqn:pe-fut-1} \\
+  &=\ \llbracket \mathtt{target} \rrbracket \ (\mathtt{input})
+\end{align}
 
-Resulting residual program accepts the input of the program and produces output of program corresponding to input.
-Residual program is compiled program.
-PE and interpreter acted like compiler.
+It might not become obvious at first.
+But looking at equation~(\ref{eqn:pe-fut-1}) one may realize, that $\llbracket \mathtt{pe} \rrbracket \ (\mathtt{interpreter},\, \mathtt{source})$ creates a program with the same meaning as \texttt{source} itself.
+The difference, however, is that while \texttt{source} is a program written in the source language, the residual program is written in the output language of the partial evaluator.
+
+Notably the partial evaluator acted like a compiler and the act of specialization produced a compiled program.
 
 
 \subsection{The Second Futamura Projection}\label{sec:futamura-second}
 
-Looking at previous projection, it can be seen that a program is applied to two inputs at once.
-PE accepts interpreter and source program.
-The second projection deals with this case and shows what happens if input is separated.
+The second of Futamura's projections is based on the first.
+Looking at the second projection, it becomes clear that the same scheme can be applied again.
+The partial evaluator itself is a program that accepts two inputs: an interpreter and a source program.
 
-PE is used to specialize PE on interpreter.
-Source program remains variable.
+So for the second projection, a partial evaluator is used, to create another stage of computation, abstract away the source as an input parameter.
+The following equation describes a partial evaluator that is used to specialize a partial evaluator in respect to an interpreter.
 
-Residual program accepts a source program to create target program.
-Residual program acts as compiler.
-PE and interpreter acted like compiler compiler.
+\begin{align}
+  \mathtt{target}\
+  &=\ \llbracket \mathtt{pe} \rrbracket \ (\mathtt{interpreter},\, \mathtt{source}) \\
+  &=\ \llbracket \llbracket \mathtt{pe} \rrbracket \ (\mathtt{pe},\, \mathtt{interpreter}) \rrbracket \ (\mathtt{source}) \label{eqn:pe-fut-2}\\
+  &=\ \llbracket \mathtt{compiler} \rrbracket \ (\mathtt{source})
+\end{align}
+
+In this case, the residual program created in equation~(\ref{eqn:pe-fut-2}) is a program, that can transform a source program into a target program.
+Consequently, using the partial evaluator and an interpreter, it is possible to create a compiler, that can translate arbitrary other programs.
+Furthermore the partial evaluator acted like a compiler generator, creating a compiler from nothing more than a partial evaluator and an interpreter.
 
 
 \subsection{The Third Futamura Projection}\label{sec:futamura-thrid}
 
-Again, looking at previous projection, program is applied to two inputs at once.
-PE accepts PE and interpreter.
-The third projections deals with this case and shows what happens if input is separated.
+The third of Futamura's projections uses the same scheme as the previous two.
+This time, it is the partial evaluator, specializing the partial evaluator in respect to an interpreter, that is the program accepting two inputs.
+Again it is possible to separate these two inputs by introducing another computational stage.
+The following equation describes a partial evaluator that is used to specialize a partial evaluator in respect to an partial evaluator.
 
-PE is used to specialize PE on PE.
-Interpreter remains variable.
+\begin{align}
+  \mathtt{compiler}\
+  &=\ \llbracket \mathtt{pe} \rrbracket \ (\mathtt{pe},\, \mathtt{interpreter}) \\
+  &=\ \llbracket \llbracket \mathtt{pe} \rrbracket \ (\mathtt{pe},\, \mathtt{pe}) \rrbracket \ (\mathtt{interpreter}) \label{eqn:pe-fut-3}\\
+  &=\ \llbracket \mathtt{compiler\operatorname{-}gen} \rrbracket \ (\mathtt{interpreter})
+\end{align}
 
-Residual program accepts an interpreter, to create a program.
-This program then accepts source to generate target.
-Residual program acts as compiler compiler.
-PE and PE acted like compiler compiler compiler, requiring only PEs.
-Interpreter determines how compiler acts.
+The residual program created in the third Futamura Projection in equation~(\ref{eqn:pe-fut-3}) is a program that can generate a compiler.
+This program is a compiler generator, that accepts the description of a languages semantic to generate a standalone compiler.
+The description is passed as an interpreter, which decides the behavior of the generated compiler.
 
 
 \subsection{Is there a Fourth Futamura Projection?}\label{sec:futamura-fourth}
 
-Equation now only consists of PEs.
-While additional is possible, it does not seem to change equation itself.
+The equations emerging from the third Futamura Projection still have the same structure as the previous equations, which would allow further to apply the previous abstraction scheme.
+It is notable, however, that further applications do not change the resulting equations.
+While this property may be called the Fourth Futamura projection, the equations themselves do not bear any new insights.
+
+\begin{align}
+  \mathtt{compiler\operatorname{-}gen}\
+  &=\ \llbracket \mathtt{pe} \rrbracket \ (\mathtt{pe},\, \mathtt{pe}) \\
+  &=\ \llbracket \llbracket \mathtt{pe} \rrbracket \ (\mathtt{pe},\, \mathtt{pe}) \rrbracket \ (\mathtt{pe}) \\
+  &=\ \ldots \nonumber
+\end{align}
+
 
 
 \subsection{Going Further}\label{sec:self-application}
 
-No new functionality seems to be yield.
-Its still desirable to further specialize.
+While no new functionality or properties arise from further application of the above scheme, it may still be desirable to further apply partial evaluation.
+The key insight is, that there are multiple ways to create a program with some specific behavior.
+But while these programs behave equally on a theoretical level as it is shown in equations, there are differences in practice.
+As it was shown with existing implementations, it is possible to gain significant speed-ups of a program, if a \enquote{specialized} compiler or compiler-generator was used.
 
-Multiple ways to create program are equal on a theoretical level, shown in equations.
-Practical differences in generated real code.
-As shown, performance gains.
+Another interesting property, that becomes clear through Futamura's projections is the relationship between programs and their generating extension.
+A generating extension of a program $p$ is a program $\mathtt{pe}_p$ that accepts an input $i$ to produce a version of $p$ that is specialized in respect to $i$ \citationneeded[Fourth Projection, 4.2].
+A good example for a generating extension can be seen in the second Futamura Projection:
+The compiler $\llbracket \mathtt{pe} \rrbracket \ (\mathtt{pe},\, \mathtt{interpreter})$ is a generating extension of the interpreter, since it accepts a source program and specializes the interpreter in respect to this source program.
+It turns out that compiler generators represent the generating extension of partial evaluators, which indicates a strong connection between them.
 
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{l l} % TODO: Spacing here
+    \toprule
+    program & generating extension \\
+    \midrule
+    $\llbracket \mathtt{interpreter} \rrbracket \ (\mathtt{source},\, \mathtt{input})$
+            & $\llbracket \llbracket \mathtt{compiler} \rrbracket \ (\mathtt{source}) \rrbracket \ (\mathtt{input}) $\\
+    $\llbracket \mathtt{parser} \rrbracket \ (\mathtt{grammer},\, \mathtt{text})$
+            & $\llbracket \llbracket \mathtt{parser\operatorname{-}gen} \rrbracket \ (\mathtt{grammar}) \rrbracket \ (\mathtt{text})$ \\
+    $\llbracket \mathtt{pe} \rrbracket \ (\mathtt{interpreter}, \mathtt{source})$
+            & $\llbracket \llbracket \mathtt{compiler\operatorname{-}gen} \rrbracket \ (\mathtt{interpreter}) \rrbracket \ (\mathtt{source})$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{Programs and their generating extensions}\label{tab:generating-extensions}
+\end{table}
 
 %%% Local Variables:
 %%% mode: latex

@@ -1,89 +1,126 @@
 
 \section{Partial Evaluation}\label{sec:partial-evaluation}
 
-Overview of inner workings of partial evaluators.
-Already covered: PE accepts a source program as input and additionally inputs for the source program itself.
-Source program is analyzed and structured, to allow for later transformation
-Section explains different variants of PEs and how they decide their ``targets'' (computable stuff)
-Afterwards different methods/tools/intruments of evaluations are explained.
+In this chapter, we dive deeper into the inner workings and implementation details of partial evaluators.
+The previous chapters already covered the operational mode of partial evaluators on a larger scale.
+Thus, we already know that a partial evaluator accepts a source program as well as some fixed inputs to the source program as its own input and produces a residual output consisting of computations that cannot be evaluated under the given static input.
+This chapter will explain, how a partial evaluator can decide, which computations can be performed statically and which have to be present in the residual program.
+Afterwards an overview of different methods are given, that can be used to perform computations given some static input.
+These methods act as instruments for a partial evaluator, to optimize a program during specialization.
 
 
 \subsection{Offline and Online Partial Evaluation}\label{sec:offline-vs-online}
 
-Two main variants on partial evaluators.
-Both act on the structured source program as input data.
-Both require some known input data for the source.
-Difference is in how computations are decided.
+Partial evaluators come in two main variants: \textit{Offline} and \textit{Online}.
+On a large scale, both variants act entirely the same.
+Both variants accept a source program as input and both require some known input data for this input program.
+The difference between those variants lies in how it is decided, which calculations will be performed by the partial evaluator and which have to be included in the residual program.
 
-To decide what to compute: Static vs. Dynamic.
-Static means (similar to compiler), that it depends on fixed values\citationneeded[Does it?]
-Since PE knows input for program, it can find static computations
-All static computations can be performed by PE.
-Dynamic computations are generated for runtime.
+To decide whether an expression of the source program can be computed during specialization or has to be part of the residual, the partial evaluator has to decide whether said part relies only on static data or not.
+If all required values are given either by the source code itself or as part of the fixed input, the resulting expression is static.
+Static expressions can be computed by the evaluator.
+On the other hand, some parts of an expression may depend on input data, that is only known at runtime.
+These expressions are called dynamic, as their value may change and thus is not known during specialization.
+Such expressions have to be included in the residual program.
 
-The decision of static vs dynamic is called division.
-Every part of program has to recognized either static or dynamic.
-How this division is made is different in the two main variants \citationneeded[A Hybrid Approach to Online and Offline Partial Evaluation].
+During specialization, must divide all parts of the input program either as static or dynamic.
+The way this division is made, is the key difference between both variants of partial evaluators \citationneeded[A Hybrid Approach to Online and Offline Partial Evaluation].
+
+\paragraph{Offline Partial Evaluation}
+depends on annotations in the source code to decide, whether an expression should be evaluated or generated as part of the residual program.
+These annotations can either be provided by the programmer or are inserted automatically during a preprocessing phase of specialization.
+During so-called binding time analysis, expressions are analyzed and annotations propagated.
+This way of dividing a source program is usually rather conservative, as annotations are made only knowing what inputs are fixed and not the values of fixed input \citationneeded[Jones, Chap 7].
+After the division is complete, all expressions annotated as static are evaluated, while those annotated as dynamic are generated as part of the residual program.
 
 
-Offline makes decision before specialization in a preprocessing phase called bindingtime analysis(BTA).
-Conservative as everything is treated dynamic until proven static.
-Annotates program \citationneeded[Jones, Chap 7] without knowing concrete values of static input.
-Then transforms input.
-
-Online makes decision during specialization with the value of a static input.
-Is more complex, since binding time analysis is not factored out as separate preprocessing step.
-Harder to predict speedup, difficult to self application or guarantee termination.
-Traverses source code deciding on the fly, if static or dynamic.
-Can use the actual values of input to perform decision, but may encounter same code multiple times.
+\paragraph{Online Partial Evaluation}
+is more of an \enquote{on the fly}-approach to partial evaluation.
+The division of static and dynamic is made during specialization, when expressions are encountered in an online partial evaluator.
+This way, partial evaluation is more complex, since the overhead of creating a division is not factored out as a separate preprocessing step.
+Consequently it is harder to predict the speedup, online partial evaluation can achieve.
+During traversal of the source program, an online partial evaluator has information about the values of different inputs and expressions and thus can often perform better optimizations as an offline evaluator.
+On the other hand, a (recursive) expression could be encountered many times leading to many or infinite versions of an expression known to the evaluator.
+Not only does this run the risk of generating a large residual program, if parts of the expression are dynamic, but it can also lead to the partial evaluator not terminating, if these cases are not accounted for.
 
 
 \subsection{Instruments of Partial Evaluation}\label{sec:pe-instruments}
 
-Overview what techniques are available for PE to compute static.
-Mainly PE is based on the propagation of static values.
-Since it allows to unlock more computations.
+In the following we will see different available techniques, that allow partial evaluators to compute static values or expressions containing (at least some) static values.
+Partial evaluation is mainly based on the propagation and removal of statically known data.
+Since initially only parts of the input of a source program are known as static data, this is the only way a partial evaluator is able to analyze and optimize an entire program.
+\citationneeded[Jones, Introduction] mentions three main techniques, which are discussed further next: symbolic computation, unfolding of function calls and program point specialization.
 
-Constant propagation (sparse constant propagation).
-constants (input) are known and computed.
-Expressions depending on constants can be computed too.
-Also conditions -> control flow is decided statically.
-Allows to cut off unused paths in code, perform many calculations.
+\subsubsection*{Symbolic Computation}
 
-\begin{lstlisting}
-  x := 2, n := 8
-  def power(int n, int x) {
-    int result = 1;
-    while (n > 1) {
-      result = result * x;
-    }
-  }
+Symbolic computation can be used as an optimization technique in an partial evaluator.
+The essence of symbolic computation as an optimization technique is to use the structure of an expression, to simplify and thus optimize it.
+Under this aspect we also consider actual performed computations as well as constant folding, constant propagation and their sub fields (e.g.\ sparse constant propagation, which is based on conditionals).
+Symbolic computation represents a powerful technique, since it is not only possible to evaluate completely constant expressions, but also simplify expressions that are based on constants.
+
+As an example consider listing~\ref{lst:symbolic-computation}.
+If the input \texttt{x} of function \texttt{f} was fixed as \texttt{x = 1}, a partial evaluator could generate function \texttt{f1} as part of a residual program.
+The original function contains two multiplication operations and one additional addition as well as an division, while the specialized function contains only a single multiplication operation.
+All of this optimization is achieved by applying the aforementioned patterns:
+
+\begin{enumerate}
+\item Constantly replacing the variable \texttt{x} with the fixed value \texttt{1} yields the expression \linebreak \texttt{y / 1 + 3 * 1 * y} as an intermediate result.
+\item The constant subexpression \texttt{3 * 1} can be evaluated using constant folding, resulting in the new expression \texttt{y / 1 + 3 * y}.
+\item The division \texttt{y / 1} can be simplified to \texttt{y} since \texttt{1} represents the neutral element of division, resulting in the expression \texttt{y + 3 * y}.
+\item Finally symbolic computation allows us to simplify this expression into \texttt{4 * y}.
+\end{enumerate}
+
+\begin{lstlisting}[language=scala,caption={Definition of a simple function and its specialization.},label={lst:symbolic-computation}]
+  def f(x: Int, y: Int): Int =
+    y / x + 3 * x * y
+
+  def f1(y: Int): Int =
+    4 * y
 \end{lstlisting}
 
 
-Unfolding (of function calls)
-Allows to propagate constants into called procedures.
-Or unroll loops into a sequence of computations.
+\subsubsection*{Unfolding Function Calls}
 
-\begin{lstlisting}
-  def power(int n, int x) {
-    if (n == 0) {
-      return 1;
-    } else {
-      return x * power(n - 1, x);
-    }
-  }
+The unfolding of function calls (also known as \textit{inlining}) is a comparatively simple technique, that allows for optimizations to be applied beyond limits of a single function.
+When unfolding a function call, the body of the called function is simply inserted at call position renaming occurring variables according to the functions parameters.
+
+Listing~\ref{lst:unfolding} shows an example of a function that is specialized and optimized using unfolding of its recursive calls.
+Fixing the input \texttt{n} with \texttt{n = 3}, it is possible to decide which of the branches is taken. In the resulting expression \texttt{3 * factorial(3 - 1)}, the recursive call can be unfolded.
+This results in the rather complicated expression of \linebreak \texttt{3 * (if ((3 - 1) == 0) 1 else (3 - 1) * factorial((3 - 1) - 1))}, which contains another recursive call, that can be unfolded as well.
+Unfolding all recursive calls (and pruning the conditional) yields the specialized function \texttt{factorial3}, as it is shown in listing~\ref{lst:unfolding}.
+Of course it is possible to further reduce the expression shown in the specialized function, since it only consists of static subexpressions.
+
+\begin{lstlisting}[language=scala,caption={Definition of the \texttt{factorial} function and its specialization.},label={lst:unfolding}]
+  def factorial(n: Int): Int =
+    if (n == 0) 1
+    else n * factorial(n - 1)
+
+  def factorial3(): Int =
+    3 * (3 - 1) * (3 - 2) * 1
 \end{lstlisting}
 
 
-symbolic computation
-Uses statically known structure of expressions to deduce simplifications.
-E.g mathematic simplicitations based on structure or mathematic identities.
+\subsubsection*{Program Point Specialization}
 
-\begin{lstlisting}
-  2 << n
+Program point specialization describes a technique to specialize functions as part of a larger program.
+Especially in larger programs, a function may be called multiple times with the same fixed partial inputs.
+Instead of generating a new function definition for each occurrence or unfolding every call, it may be preferred to extract a shared function definition to minimize code size.
+Listing~\ref{lst:pps} shows the specialization of Ackermann's function with the fixed input \texttt{n = 2} as an example, while also applying the previously mentioned optimization strategies.
+
+\begin{lstlisting}[language=scala,caption={Definition of the \texttt{ackermann} function and its specialization.},label={lst:pps}]
+  def ack(n: Int, m: Int): Int =
+    if (m == 0) n + 1
+    else if (n == 0) a(m - 1, 1)
+    else a(m-1, a(m, n-1))
+
+  def ack2(n: Int): Int =
+    if (n == 0) 3
+    else a1(a2(n - 1))
+
+  def ack1(n: Int): Int =
+    if (n == 0) 2
+    else a1(n - 1)
 \end{lstlisting}
-
 
 
 %%% Local Variables:
