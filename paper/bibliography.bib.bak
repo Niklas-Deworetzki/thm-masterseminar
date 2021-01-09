@@ -33,13 +33,43 @@
 @Book{Grune_ModernCompilerDesign,
   author    = {Grune, D. and van Reeuwijk, K. and Bal, H. E. and Jacobs, C. J. H. and Langendoen, K.},
   publisher = {Springer},
-  title     = {Modern Compiler Design},
+  title     = {Modern compiler design},
   year      = {2012},
   edition   = {2},
   isbn      = {978-1-4614-4698-9},
   month     = jul,
   date      = {2012-07-02},
   pagetotal = {844},
+}
+
+@InProceedings{Glueck_FourthProjection,
+  author    = {Glück, R.},
+  booktitle = {Proceedings of the 2009 ACM SIGPLAN workshop on Partial evaluation and program manipulation},
+  title     = {Is there a fourth {Futamura} projection?},
+  year      = {2009},
+  pages     = {51--60},
+  location  = {Savannah, GA, USA},
+}
+
+@Article{Jones_IntroductionPartialEvaluation,
+  author  = {Jones, N.},
+  journal = {ACM Computing Surveys},
+  title   = {An introduction to partial evaluation},
+  year    = {1996},
+  number  = {3},
+  pages   = {480--503},
+  volume  = {28},
+}
+
+@Article{Futamura_PECompilerCompiler,
+  author   = {Futamura, Y.},
+  journal  = {Higher-Order and Symbolic Computation},
+  title    = {Partial evaluation of computation process--an approach to a compiler-compiler},
+  year     = {1999},
+  number   = {4},
+  pages    = {381--391},
+  volume   = {12},
+  abstract = {This paper reports the relationship between formal description of semantics (i.e., interpreter) of a programming language and an actual compiler. The paper also describes a method to automatically generate an actual compiler from a formal description which is, in some sense, the partial evaluation of a computation process. The compiler-compiler inspired by this method differs from conventional ones in that the compiler-compiler based on our method can describe an evaluation procedure (interpreter) in defining the semantics of a programming language, while the conventional one describes a translation process.},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}
