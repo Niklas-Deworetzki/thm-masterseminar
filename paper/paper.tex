@@ -129,10 +129,48 @@ pdftitle={\MyTitle{}~--~\MyTopic{}}]{hyperref}
 %==============================================================================
 \begin{document}
 
-\title{\MyTopic{}}
+\begin{titlepage}
+  \begin{center}
+    \begin{figure}
+      % THM Logo
+      \includegraphics[width=\textwidth]{LOGO_THM_CG_FB06}
+    \end{figure}
+  \end{center}
+  % Title
+  \Large
+  \begin{center}
+    \vspace{1cm}
+    \textbf{\MyTitle{}}\linebreak
+    \vspace{1cm}
+  \end{center}
+  \large
+  Subject:\\
+  \textbf{\MyTopic{}}
 
-\author{\MyName{}}
-\maketitle
+  \normalsize
+  \vfill
+  % \begin{tabular*}{\textwidth}[t]{l,c,l}
+  \begin{center}
+    \begin{tabular*}{0.75\textwidth}%
+      {@{\extracolsep{\fill}}ll}
+
+      {Submitted by:} & {\MyName{}}\\
+      {} & {\href{mailto:niklas.deworetzki@mni.thm.de}{niklas.deworetzki@mni.thm.de}}\\
+      {} & {}\\
+      {Matriculation number:} & {1234567}\\
+      {} & {}\\
+      {} & {}\\
+      {Tutor:} & {Prof.\ Dr.\ Uwe\ Meyer}\\
+      {} & {}\\
+      {} & {}\\
+      {Date of Submission:} & {\today}
+
+    \end{tabular*}
+  \end{center}
+
+  \vfill
+\end{titlepage}
+
 
 \input{chapters/introduction}
 \input{chapters/execution-and-programs}
