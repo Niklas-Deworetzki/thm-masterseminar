@@ -1,67 +1,57 @@
 
 \section{Execution of Programs}\label{chap:programs}
 
-In computer science, we use algorithms to describe, how computational problems can be solved.
-Building on decades of research, we can often determine which computational problems are solvable and can even categorize them depending on different strengths of the problem\citationneeded[].
-While this is a great success for the field of computer science, the effect of algorithms on the real world is rather limited.
-Since algorithms describe abstract rules on how to structure and solve a program, a rather abstract computational framework is required to execute them.
-Consequently the \enquote{computer} executing an algorithm in its pure form, is usually a human being.
+% Usually execution of programs is seen as a single, atomic step of computation.
+% Programs solving computational program are executed, accepting input, producing output. (Figure)
+% In reality programs often can't be excuted directly.
+% Programs accepting programs are used to transform into executable form. (Meta programs)
+% Three forms of meta programs are presented: Interpreters and compilers, mostly known
+% Finally PE in  order to categorize.
 
-In order to use the capabilities of modern computers, which can perform billions of calculations per second and are therefore much better suited to automatically processing large data sets, algorithms need to be transformed in a more practical notation.
-The description of an algorithm in a concrete programming language is called program.
-Additionally to the description of an algorithm, a program written in a programming language also describes mechanisms to read an input (parameters to the computational problem) and produce an output (the solution to the problem).
-This way solving a computational is now a matter of executing the program.
+Programs are implementations of algorithms, which are used to solve computational problems.
+In contrast to algorithms, programs handle details as acquiring inputs, producing outputs, structuring memory and other tasks, that are required in order to be executed by a machine.
+
+Figure~\ref{fig:native-program} shows a schematic representation of how a program is used to solve a computational problem.
+The program accepts inputs and produces an output, both of which are represented by oval shapes, with arrows describing their relationship with the program.
+As it can be seen, a single program may accept many inputs, allowing it to handle as many cases of the computational problem and producing an output in each of these cases.
+Naturally with the capability of reading, distinguishing and validating different inputs, the complexity of a program grows.
+But as figure~\ref{fig:native-program} also shows, the execution occurs as a single computational stage, regardless of the required resources.
+
+In reality, however, it is often not possible to directly execute a program, as the language it is written is can not be executed by a computer.
+Computers are limited in that they can only execute instructions, that are described in a low-level machine language.
+Programs on the other hand are usually written in a higher-level language, since the abstractions provided by this language allows a better description of the required instructions.
+In order to execute such a program, written in a higher language, a translation has to be performed.
+The tedious task of translating programs can be performed manually.
+But it turns out, that translating a program is also a computational problem, that can automatically be solved by a program.
+These programs, that accept other programs as an input in order to solve computational problems, are called meta-programs.
+In this paper, three different variants of meta-programs are relevant as they show different ways of how this transformation can be done and how the execution of a program can be achieved.
+Starting with interpreters and compilers, a fundamental understanding on the execution of programs is provided, before partial evaluators are introduced.
 
 \begin{figure}
   \centering
-  
+% TODO
   \caption{Direct execution of a program}\label{fig:native-program}
 \end{figure}
 
-Figure~\ref{fig:native-program} shows a schematic representation of a program and its execution. % TODO: Explain notation.
-As can be seen, a program may accept many inputs, allowing it to handle as many cases of the computational problem and producing (hopefully) correct solutions as an output.
-Naturally with the capability of reading, distinguishing and validating different inputs, the complexity of a program grows.
-But as figure~\ref{fig:native-program} also shows, the execution of the program represents a single computational step regardless of the programs complexity or the required resources.
-
-In order to execute a program, a computer must be able to understand the language it is written in.
-Machine instructions are the only language, a modern computer is truly able to execute.
-While these instructions are efficient and executable by the computer, they are not made for humans.
-Thus a program written directly in machine instructions is usually not easy to write, easy to maintain or easy to understand.
-Higher programming languages are available, which provide easier usage and a simpler description of programs.
-These higher languages however are not executable by the hardware directly and programs written in a higher language have to be transformed into machine instructions, to be executed.
-
-Naturally this transformation can be done by a human being, although this task is very tedious.
-The transformation of programs is however a computational problem itself.
-Consequently programs can be used to automate this task.
-These programs, that accept programs as their input, are so-called meta programs.
-In this paper, three different variants of meta-programs are relevant as they show different ways of how this transformation can be done and how the execution of a program can be achieved. % TODO: Hook for next sections.
 
 
 \subsection{Interpreters}
 
-% TODO: Language of the interpreter.
-Interpreters are meta programs, that execute other programs.
-The input of an interpreter is a program, that is then analyzed and usually transformed into a intermediate representation.
-This intermediate representation---the abstract syntax tree---represents the structure and contents of the program as a tree of nodes.
-The nodes represent different expressions, statements and other language constructs present in the source program and their relation to each other forms a tree structure.
-By assigning a meaning to these nodes, a program becomes executable.
-The traversal of nodes, while performing actions according to the meaning of the traversed nodes, is equivalent to the execution of the program.
+Interpreters are meta programs that execute other programs.
+The program to be executed is passed as an input to the interpreter, which is then analyzed and usually transformed into an intermediate representation.
+This tree-like structure mirrors the structure and contents of the program.
+By assigning a meaning to every node of this tree, a program becomes executable by traversing the tree and performing actions according to the assigned meaning.
+Now, given that the interpreter can be executed, programs written in a language, the interpreter can accept as an input, can be executed too.
+As Figure~\ref{fig:interpreted-program} shows, the interpreted execution of a program looks very similar as the direct, native execution.
+The only difference is, that the program to be executed is now itself along with its inputs passed as an input to the interpreter.
+Execution this way is still a single computational stage.
 
-Given interpreter can be executed, program can be executed too.
-The way an interpreter accepts input and produces output is very similar to the native execution of an program as seen in the previous section. % TODO: Reference section.
-Additionally to the programs inputs, an interpreter accepts the program itself as input and executes it.
-The output produced by an interpreter is the output the program itself would produce, given the same input.
-Figure~\ref{fig:interpreted-program} shows that the execution via an interpreter is similar to the native execution of a program, in the chosen way to represent execution.
-
-Atomic execution step, just accepting one more input.
-
-
-Advantage of interpreter: easy to write.
-Less performance, overhead of interpretation, shares resources.
+Interpreters provide a simple solution to execute programs in another language and are relatively easy to implement.
+On the downside, execution via an interpreter provides less performance, as interpreter and interpreted program share the same resources and some computational overhead is required for analysis of said program.
 
 \begin{figure}
   \centering
-  
+% TODO
   \caption{An interpreter executing a program}\label{fig:interpreted-program}
 \end{figure}
 
@@ -69,25 +59,18 @@ Less performance, overhead of interpretation, shares resources.
 \subsection{Compilers}
 
 Compilers, similar to interpreters, are programs that are used to transform other programs.
-The way of working even is similar, as compilers also accept a program as input, analyze this input and usually transform it into an intermediate representation.
-The difference between a compiler and an interpreter is, that the meaning of the input program is not directly executed.
-Rather, a compiler translates the meaning of its input into another language and produces an output program with the same meaning as the input program, just written in another language.
+While an interpreter uses the intermediate representation of a program to directly executed the assigned meaning to it, a compiler translates it into another language.
+As a result, a compiler produces a single output, which is the so-called target program.
+This program holds the meaning of the input program translated into another language.
+As seen in Figure~\ref{fig:compiled-program}, this way an additional stage of computation is introduced, since the target program has to be executed, to accept inputs and produce an output like the original program.
 
-This so-called target program is the single output of a compiler.
-A compiler does not accept any of the input intended for the source program.
-A compiler also does not produce any output, the source program would produce.
-As seen in figure~\ref{fig:compiled-program}, a compiler splits the execution into two computational stages this way, since the target program has to be executed, accepting input and producing output.
-
-Visually in this figure, this seems like a disadvantage, since now multiple languages need to be executable in order to execute the source program.
-In practice this is usually not a problem.
-More importantly, an advantage arises since the overhead of analyzing the input program is removed from the generated target program.
-If the target program can now be executed directly, the execution is usually efficient.
-This is especially true, if the target program is going to be executed multiple times, since the overhead of analyzing the source program is only done once during compilation, while an interpreter would need to analyze the program every time it is executed.
-On the other hand, compilers are harder to develop, since multiple languages and execution stages have to be taken into account.
+As already apparent visually, the translation process of a compiler is more complex than the process of an interpreter.
+Since the input program has to be only analyzed once and the target program is executed as a standalone program, compilation usually provides a better performance in contrast to interpretation.
+This is especially true, if the same program is executed multiple times, since no computational overhead is present during the execution of the target program, after is has been created once.
 
 \begin{figure}
   \centering
-  
+% TODO
   \caption{A compiler generating an executable target program}\label{fig:compiled-program}
 \end{figure}
 
@@ -95,34 +78,22 @@ On the other hand, compilers are harder to develop, since multiple languages and
 
 \subsection{Partial Evaluators}
 
-Partial evaluator generalizes concept of splitting computational stages.
-Accepts program as input as well as inputs for program itself.
-Performs computations that are available under partial input and deferres other computations.
+Partial evaluators, as the third meta program introduced and focus of the following paper, generalize the concept of splitting computational stages that has been introduced by compilers.
+The inputs of a partial evaluator are a source program as well as some inputs for this program.
+Given these inputs, a partial evaluator will perform all computations of the source that are available under the given inputs.
+As not all inputs for the source program are present, some computations cannot be performed.
+These computations form a so-called residual program, the output of a partial evaluator.
 
-On a high level working is similar to compiler and interpreter.
-Program as input, analyzed and intermediate representation.
-Instead of executing all, only parts are executed while the residue is generated.
-The generated program is called residue program.
-
-From this scheme, partial evaluator is mix between interpreter and compiler.
-Sometimes called mix in literature.
+While Figure~\ref{fig:partial-evaluated-program} is structurally similar to Figure~\ref{fig:compiled-program} describing a compiler, the concept is generalized.
+A compiler only splits overhead of analysis and the actual computation into different computational stages.
+A partial evaluator can split calculations depending on different input into different computational stages.
+This way, a general program accepting multiple inputs can be specialized to a fixed input, which usually leads a higher performance, since the overhead of recognizing inputs are removed.
 
 \begin{figure}
   \centering
-  
+% TODO
   \caption{A partial evaluator generating a residual program}\label{fig:partial-evaluated-program}
 \end{figure}
-
-While \ref{fig:partial-evaluated-program} is similar to \ref{fig:compiled-program} describing compiler, concept is generalized.
-Compiler splits overhead of analyzing and computation in different stages.
-Partial evaluator can split calculations depending on any input in different stages.
-A general program, accepting multiple inputs can be specialized to a fixed input.
-Allows higher performance, since decisions depending on input are removed.
-
-Coming from initial description of programs.
-General problem solver can be fixed on problems.
-Other Examples are: Ray tracing, web servers, config files in general.
-
 
 
 %%% Local Variables:
