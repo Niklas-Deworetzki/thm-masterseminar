@@ -1,32 +1,27 @@
 
 \section{Critical Assessment}\label{sec:discussion}
 
-PE is great technology to solve many problems.
+As demonstrated in the previous chapters, partial evaluation as a technology has applications in many fields of programming and computer science.
+The use of partial evaluation in software development would allow developers to create a single general program, that could then be specialized to a fixed problem domain.
+This way, development costs could be reduced as it is only necessary to develop and maintain a single application, or existing programs depending on a fixed configuration could be optimized.
+Often cited examples for the second case are web servers, that are dependend on a configuration file or the specialization of a renderer to a fixed scene \citationneeded[Sestoft].
 
-Advantageous in Software Development.
-General programs can be fast, speed-up.
-Why not widespread, could tooling/compilcated use.
+Nevertheless, partial evaluation is not widespread and its use is often limited to research areas.
+The focus of existing specializers is often the exploration of new strategies and possibilities rather than user experience \citationneeded[].
+Additionally, partial evaluation does not provide a one-size-fits-all solution, as the two common approaches online and offline partial evaluation both come along with advantages and disadvantages.
+Online partial evaluation generally has the capability to produce more optimized residual programs.
+It is, however, not always applicable, as the specialization will not always halt, if its inputs are not restricted.
+Offline partial evaluation on the other hand, has no problems with termination, but generally yields less optimized residual programs.
+The gains of optimization are with both cases hard to predict and largely dependent on the concrete input \citationneeded[Online and Offline].
 
+It is unlikely, that the use of partial evaluators and interpreters as an alternative to traditional compiler construction will be widespread.
+While the creation of a compiler from a partial evaluator and an interpreter looks easy in theory, in practice the effort of constructing a partial evaluator and an interpreter is not substantially smaller than the effort of constructing a single compiler.
+Additionally the right combination of implementation, input and output languages is required to make this way of compilation useful, as normally compilers are used to generate low-level machine code.
 
-Not ripe in some areas.
-Online is fast, but has termination problems.
-Offline has less problems, but less speed up.
-Generally speed-up is hard to predict/dependent on input.
-
-
-Use as compiler is nice in theory, not really in practice.
-Wont replace classical compiler construction.
-Compilers are not created ``from nothing'', interpreters must exist and PEs too.
-Target language is language from PE, for some tricks limited in language.
-Compiler constructors would be needed in those fields, developing PEs.
-
-Even existing PE and interpreter wont completely replace CC.
-For optimizing compilers, as industry requires, clever people are needed.
-PEs can't invent new data structures, can't invent mathematics, simplifications or dirty tricks.
-PE only restructure input using known rules.
-People are needed to implement or invent those rules,
-people are needed to keep up to date, since technology is evolving.
-
+Even if this way of constructing compilers would become widespread, classical compiler construction would still be relevant.
+All optimizations a partial evaluator and a compiler created from it can use, have to be implemented at first.
+Efficient data structures, mathematical simplifications and clever use of available hardware are not created \enquote{from nothing}.
+A partial evaluator will only use existing structures within itself, an interpreter or the source program and thus, human ingenuity is required to create truly efficient programs.
 
 
 %%% Local Variables:
