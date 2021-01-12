@@ -11,6 +11,7 @@
 Programs are implementations of algorithms, which are used to solve computational problems.
 In contrast to algorithms, programs handle details as acquiring inputs, producing outputs, structuring memory and other tasks, that are required in order to be executed by a machine.
 
+% TODO: Changed shapes
 Figure~\ref{fig:native-program} shows a schematic representation of how a program is used to solve a computational problem.
 The program accepts inputs and produces an output, both of which are represented by oval shapes, with arrows describing their relationship with the program.
 As it can be seen, a single program may accept many inputs, allowing it to handle as many cases of the computational problem and producing an output in each of these cases.
@@ -29,7 +30,23 @@ Starting with interpreters and compilers, a fundamental understanding on the exe
 
 \begin{figure}
   \centering
-% TODO
+  \begin{tikzpicture}[
+    base/.style={draw, thick, minimum width = 2.4cm, minimum height = 1cm},
+    data/.style={rectangle, base},
+    program/.style={ellipse, base},
+    arrow/.style={-triangle 90}]
+
+    \node[program] (prog) at (0, 0) {program};
+    \node[data, right = of prog] (output) {output};
+    \node[data, left = of prog] (input2) {input\textsubscript{2}};
+    \node[data, above = 0cm of input2] (input1) {input\textsubscript{1}};
+    \node[data, below = 0cm of input2] (input3) {$\ldots$};
+
+    \draw [arrow] (input1) -- (prog);
+    \draw [arrow] (input2) -- (prog);
+    \draw [arrow] (input3) -- (prog);
+    \draw [arrow] (prog) -- (output);
+  \end{tikzpicture}
   \caption{Direct execution of a program}\label{fig:native-program}
 \end{figure}
 
@@ -51,7 +68,23 @@ On the downside, execution via an interpreter provides less performance, as inte
 
 \begin{figure}
   \centering
-% TODO
+  \begin{tikzpicture}[
+    base/.style={draw, thick, minimum width = 2.4cm, minimum height = 1cm},
+    data/.style={rectangle, base},
+    program/.style={ellipse, base},
+    arrow/.style={-triangle 90}]
+
+    \node[program] (interpreter) at (0, 0) {interpreter};
+    \node[data, left = of interpreter] (input) {input};
+    \node[program, above = 0cm of input] (program) {program}; \node[data, above = 0cm of input] {};
+    \node[data, below = 0cm of input] (input2) {$\ldots$};
+    \node[data, right = of interpreter] (output) {output};
+
+    \draw [arrow] (program) -- (interpreter);
+    \draw [arrow] (input) -- (interpreter);
+    \draw [arrow] (input2) -- (interpreter);
+    \draw [arrow] (interpreter) -- (output);
+  \end{tikzpicture}
   \caption{An interpreter executing a program}\label{fig:interpreted-program}
 \end{figure}
 
@@ -70,7 +103,25 @@ This is especially true, if the same program is executed multiple times, since n
 
 \begin{figure}
   \centering
-% TODO
+  \begin{tikzpicture}[
+    base/.style={draw, thick, minimum width = 2.4cm, minimum height = 1cm},
+    data/.style={rectangle, base},
+    program/.style={ellipse, base},
+    arrow/.style={-triangle 90}]
+
+    \node[program] (compiler) at (0, 0) {compiler};
+    \node[data, left = of compiler] (source) {source};
+    \node[data, below = of compiler] (target) {target}; \node[program, below = of compiler] {};
+
+    \node[data, left = of target] (input) {input};
+    \node[data, right = of target] (output) {output};
+
+    \draw [arrow] (source) -- (compiler);
+    \draw [arrow] (compiler) -- (target);
+
+    \draw [arrow] (input) -- (target);
+    \draw [arrow] (target) -- (output);
+  \end{tikzpicture}
   \caption{A compiler generating an executable target program}\label{fig:compiled-program}
 \end{figure}
 
@@ -91,7 +142,30 @@ This way, a general program accepting multiple inputs can be specialized to a fi
 
 \begin{figure}
   \centering
-% TODO
+  \begin{tikzpicture}[
+    base/.style={draw, thick, minimum width = 2.4cm, minimum height = 1cm},
+    data/.style={rectangle, base},
+    program/.style={ellipse, base},
+    arrow/.style={-triangle 90}]
+
+    \node[program] (pe) at (0, 0) {pe};
+    \node[data, left = of pe] (input1) {input\textsubscript{1}};
+    \node[data, above = 0cm of input1] (source) {source};
+    \node[data, below = of pe] (residual) {residual}; \node[program, below = of pe] {};
+
+    \node[data, left = of residual] (input2) {input2};
+    \node[data, below = 0cm of input2] (input3) {$\ldots$};
+    \node[data, right = of residual] (output) {output};
+
+    \draw [arrow] (source) -- (pe);
+    \draw [arrow] (pe) -- (residual);
+
+    \draw [arrow] (input1) -- (pe);
+    \draw [arrow] (input2) -- (residual);
+    \draw [arrow] (input3) -- (residual);
+
+    \draw [arrow] (residual) -- (output);
+  \end{tikzpicture}
   \caption{A partial evaluator generating a residual program}\label{fig:partial-evaluated-program}
 \end{figure}
 
