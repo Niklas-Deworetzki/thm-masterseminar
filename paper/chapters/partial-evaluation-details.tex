@@ -96,6 +96,37 @@ Listing~\ref{lst:pps} shows the specialization of Ackermann's function with the 
 \end{lstlisting}
 
 
+
+\subsection{Offline and Online Partial Evaluation}\label{sec:offline-vs-online}
+
+As it was shown, a partial evaluator has to differentiate between static and dynamic parts of a program.
+If some expression or statement only depends on static data, the computation represented by these elements is static too and can be performed during evaluation.
+On the other hand it is possible, that some parts may depend on input data that is only known at runtime.
+In this case, it specialization is not always possible and the computations have to be included in the residual program.
+
+To properly perform the specialization, a partial evaluator must divide all parts of the input program into either static or dynamic computations.
+The way this division is made is the key difference between the two main variants of partial evaluators.
+This variants differentiate between \textit{online} and \textit{offline} partial evaluation, each of which has its own advantages and disadvantages.
+
+\paragraph{Offline Partial Evaluation}
+depends on annotations in the source code in order to\linebreak decide, whether a computation can be performed during specialization or has to be generated as part of the residual program.
+These annotations can either be provided by the programmer or are inserted automatically during a preprocessing phase of specialization.
+During so-called binding-time analysis, the program is analyzed and annotations are propagated.
+This way of dividing a source program is usually rather conservative.
+Annotations are only based on the knowledge of what input variables are fixed and without knowledge of the inputs values~\cite[Chap. 7]{Jones_PartialEvaluation}.
+After the division is complete, all computations annotated as static are performed, while those annotated as dynamic are generated as part of the residual program.
+
+
+\paragraph{Online Partial Evaluation}
+is more of an \enquote{on the fly}-approach to partial evaluation.
+The division between static and dynamic is made during specialization when expressions or statements are encountered in an online partial evaluator.
+This way, partial evaluation is more complex, since the overhead of creating a division is not factored out as a separate preprocessing step~\cite{Cook_TutorialOnlinePartialEvaluation}.
+Consequently, it is harder to predict the speedup online partial evaluation can achieve.
+During traversal of the source program, an online partial evaluator has information about the values of different inputs, variables and expressions and thus can often perform more optimizations compared to an offline evaluator.
+On the other hand, a (recursive) definition could be encountered many times leading to many or potentially infinite versions of it known to the evaluator.
+Not only does this run the risk of generating a huge residual program, but it can also lead to the partial evaluator not terminating if these cases are not accounted for.
+
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../paper"
