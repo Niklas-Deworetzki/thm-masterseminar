@@ -68,14 +68,18 @@ On the downside, execution via an interpreter provides less performance, as inte
     arrow/.style={-triangle 90}]
 
     \node[program] (interpreter) at (0, 0) {interpreter};
-    \node[data, left = of interpreter] (input) {input};
-    \node[program, above = 0cm of input] (program) {program}; \node[data, above = 0cm of input] {};
-    \node[data, below = 0cm of input] (input2) {$\ldots$};
+
+    \node[data, above left = -0.4cm and 1.4cm of interpreter] (input) {input\textsubscript{1}};
+    \node[data, below = 0cm of input] (input2) {input\textsubscript{2}};
+    \node[data, above = 0cm of input] (program) {program}; \node[program, above = 0cm of input] {};
+    \node[data, below = 0cm of input2] (input3) {$\ldots$};
+
     \node[data, right = of interpreter] (output) {output};
 
-    \draw [arrow] (program) -- (interpreter);
-    \draw [arrow] (input) -- (interpreter);
-    \draw [arrow] (input2) -- (interpreter);
+    \draw [arrow] (program.east) -- (interpreter);
+    \draw [arrow] (input.east) -- (interpreter);
+    \draw [arrow] (input2.east) -- (interpreter);
+    \draw [arrow] (input3.east) -- (interpreter);
     \draw [arrow] (interpreter) -- (output);
   \end{tikzpicture}
   \caption{An interpreter executing a program}\label{fig:interpreted-program}
