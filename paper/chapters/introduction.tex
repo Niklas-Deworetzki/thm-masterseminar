@@ -7,41 +7,41 @@ Partial evaluation provides a unifying paradigm for many forms of program genera
 It offers solutions and insights to many areas of computer science, from program analysis, interpretation and compilation to the automated generation of programs.
 
 The classical use case of partial evaluators is the partial evaluation (or specialization) of programs.
-Specialization of programs is similar to currying, as it is known from logic or functional programming, or the creation of projections in mathematics \citationneeded[Sesoft, Intro].
+Specialization of programs is similar to currying, as it is known from logic or functional programming, or the creation of projections in mathematics~\cite{Jones_PartialEvaluation}.
 The idea behind these concepts is to reduce a function accepting many arguments to a function accepting only a single argument.
 Especially in partial evaluation, this can be achieved by fixing parameters.
 However, instead of functions, partial evaluation deals with programs, that process an arbitrary number of inputs.
 
-The theoretical basis to partial evaluation lies in the \smn{} theorem \citationneeded[SNM, Kleene].
+The theoretical basis for partial evaluation lies in the \smn{} theorem~\cite{Kleene_GeneralRecursiveFunctions}.
 In this theorem, Kleene showed that given a program accepting $m + n$ inputs and $m$ values for those inputs, it is possible to construct a specialized program accepting only the $n$ remaining inputs, where the first $m$ have been fixed.
-While this work is important in the area of computability, speed and efficiency of generated programs were of little importance to him.
+While this work is important in the area of computability, the speed and efficiency of generated programs were of little importance to him.
 When aiming for practical specializations, the information about fixed inputs can be used to speed up computations, highlighting the connection with the optimization of programs.
 
 
 \subsection{Terminology}
 
 Before proceeding further into different areas of partial evaluation, it is important to establish some commonly used terminology.
-The arguably most important part on this topic is the partial evaluator itself, the program performing partial evaluation.
-Since the act of partial evaluation is also referred to as the specialization of programs, a partial evaluator is also called specializer.
-Another occasionally used name is Mix, since it mixes different computations (see Chapter~\ref{chap:programs}).
+The arguably most important part of this topic is the partial evaluator itself, the program performing a partial evaluation.
+Since the act of partial evaluation is also referred to as the specialization of programs, a partial evaluator is also called a specializer.
+Another occasionally used name is Mix since it mixes different computations (see Chapter~\ref{chap:programs}).
 
 In the following chapters, the terminology used to describe partial evaluation may sometimes be imprecise, since strictly speaking partial evaluation deals with the specialization of programs and not single functions.
 As it is possible to convert a function into a program executing only this single function, this imprecision is accepted in the remainder of this work to promote readability and brevity.
 
-In a similar sense, some details exist in the application and implementation of partial evaluators that are not discussed here, as they do not necessarily aid tangability.
+In a similar sense, some details exist in the application and implementation of partial evaluators that are not discussed here, as they do not necessarily aid tangibility.
 Partial evaluators are limited to their implementation, source and target language, similar to compilers, which can not be used for any program and programming language.
 Additionally, in this work it is assumed, that partial evaluators and presented example programs always halt, as it aids simplicity.
-In a real world application, this assumption may not always be correct and must be considered appropriately.
+In a real-world application, this assumption may not always be correct and must be considered appropriately.
 
 \subsection{Structure of this paper}
 
 This work is separated into four main chapters, highlighting different topics on partial evaluation.
-First in Chapter~\ref{chap:programs} different execution strategies are presented and a classification of partial evaluation is given in respect to them.
-The second topic presented in Chapter~\ref{sec:partial-evaluation} deals with inner workings of partial evaluation.
+First of all, in Chapter~\ref{chap:programs} different execution strategies are presented and partial evaluation is classified with respect to them.
+The second topic presented in Chapter~\ref{sec:partial-evaluation} deals with the inner workings of partial evaluation.
 Here are different strategies presented, that are partial evaluator can use to specialize programs.
-Additionally the difference between online and offline partial evaluation are explained.
+Additionally, the differences between online and offline partial evaluation are explained.
 Chapter~\ref{sec:futamura} presents the Futamura Projections, which are a central scheme of partial evaluation, showing relations to compiler construction and interpretation.
-Finally, the last Chapters~\ref{sec:discussion}~and~\ref{sec:conclusion} focus on a critical assessment of the entire topic.
+Finally, the last Chapter~\ref{sec:discussion} focuses on a critical assessment of the entire topic.
 
 %%% Local Variables:
 %%% mode: latex

@@ -123,7 +123,7 @@ pdftitle={\MyTitle{}~--~\MyTopic{}}]{hyperref}
 % Zeilenumbrüche bei Unterstrichen (in langen Variablennamen)
 \renewcommand\_{\textunderscore\allowbreak}
 
-\newcommand{\citationneeded}[1][]{\textsuperscript{\textcolor{red}{\textbf{[CN]}}}}
+\newcommand{\citationneeded}[1][]{\textcolor{red}{\textbf{[?]}}}
 % ------------------------------------------------------------------------------
 
 %==============================================================================
@@ -157,7 +157,7 @@ pdftitle={\MyTitle{}~--~\MyTopic{}}]{hyperref}
       {Submitted by:} & {\MyName{}}\\
       {} & {\href{mailto:niklas.deworetzki@mni.thm.de}{niklas.deworetzki@mni.thm.de}}\\
       {} & {}\\
-      {Matriculation number:} & {1234567}\\ % TODO
+      {Matriculation number:} & {5185551}\\
       {} & {}\\
       {} & {}\\
       {Tutor:} & {Prof.\ Dr.\ Uwe\ Meyer}\\
@@ -171,12 +171,20 @@ pdftitle={\MyTitle{}~--~\MyTopic{}}]{hyperref}
   \vfill
 \end{titlepage}
 
+\input{chapters/abstract}
+\newpage
+
+\pagenumbering{arabic}
 
 \input{chapters/introduction}
 \input{chapters/execution-and-programs}
 \input{chapters/partial-evaluation-details}
 \input{chapters/futamura-projections}
 \input{chapters/critical-assessment}
+
+\newpage
+\nocite{Jones_IntroductionPartialEvaluation}
+\printbibliography{}
 
 \end{document}
 
