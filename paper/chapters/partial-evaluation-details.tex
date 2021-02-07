@@ -17,38 +17,49 @@ Afterwards it is explained, how a partial evaluator can decide, which computatio
 
 \subsection{Instruments of Partial Evaluation}\label{sec:pe-instruments}
 
-In the following, we will see different available techniques, that allow partial evaluators to compute static values or expressions containing (at least some) static values.
-Partial evaluation is mainly based on the propagation and removal of statically known data.
-Since initially only parts of the input of a source program are known as static data, this is the only way a partial evaluator is able to analyze and optimize an entire program.
+In the following, we will see different techniques that allow partial evaluators to perform computations if they depend on (at least some) static values.
+Since a partial evaluator can only work on the statically known information, most techniques are based on the propagation of statically known information or the removal of redundant computations.
 \cite[Chap. 1]{Jones_PartialEvaluation}~mentions three main techniques, which are discussed further next: symbolic computation, unfolding of function calls and program point specialization.
 
 \subsubsection*{Symbolic Computation}
 
 Symbolic computation can be used as an optimization technique in a partial evaluator.
-The essence of symbolic computation as an optimization technique is to use the structure of an expression, to simplify and thus optimize it.
-Under this aspect, we also consider performed computations as well as constant folding, constant propagation and their subfields (e.g.\ sparse constant propagation, which is based on conditionals).
-Symbolic computation represents a powerful technique since it is not only possible to evaluate completely constant expressions, but also simplify expressions that are based on constants.
+The essence of symbolic computation as an optimization technique is to perform computations on symbols themselves instead of their values.
+This allows the simplification of expressions, restructuring of control flow and other transformations, that aim to reduce the computations required to perform at runtime.
+Under the aspect of symbolic computation, we also consider constant folding, constant propagation and their subfields (e.g.\ sparse constant propagation, which is based on conditionals).
+Symbolic computation presents a powerful technique, since it is not only possible to compute completely static values but also simplify computations based on constants or computations with a known structure.
 
-As an example consider Listing~\ref{lst:symbolic-computation}.
-If the input \texttt{x} of function \texttt{f} was fixed as \texttt{x = 1}, a partial evaluator could generate a specialized function \texttt{f1} as part of a residual program.
-The original function contains two multiplications, one addition as well as one division and one subtraction, while the specialized function contains only a single multiplication operation.
-This optimization is achieved by applying the aforementioned patterns:
+\begin{figure}[h]
+  \setcounter{figure}{0}
+  \setcounter{lstlisting}{1}
+  \renewcommand\figurename{Listing}
+\noindent\begin{minipage}{.45\textwidth}
+  \begin{lstlisting}[language=c,autogobble=true]
+    void p(int x, int y) {
+      print(x);
+      if (y == 0) x += y;
+      print(2 * x);
+    }
+  \end{lstlisting}
+\end{minipage}\hfill
+\begin{minipage}{.45\textwidth}
+  \begin{lstlisting}[language=c,autogobble=true]
+    void p1(/* x is 1 */ int y) {
+      print(1);
 
-\begin{enumerate}
-\item Replacing the variable \texttt{x} with the fixed value of \texttt{1} yields the following expression as an intermediate result: \texttt{y / (1 - 2) + 3 * 1 * y}.
-\item The constant subexpressions \texttt{3 * 1} and \texttt{1 - 2} can be evaluated using constant folding, resulting in the new expression \texttt{y / (-1) + 3 * y}.
-\item The division \texttt{y / (-1)} can be simplified to \texttt{-y} since \texttt{1} represents the neutral element of division, resulting in the expression \texttt{-y + 3 * y}.
-\item Finally symbolic computation allows us to simplify this expression into \texttt{2 * y}.
-\end{enumerate}
+      print(2);
+    }
+  \end{lstlisting}
+\end{minipage}
+  \caption{Definition of a simple procedure and its specialization}\label{lst:symbolic-computation}
+\end{figure}
 
-\begin{lstlisting}[language=scala,caption={Definition of a simple function and its specialization.},label={lst:symbolic-computation}]
-  def f(x: Int, y: Int): Int =
-    y / (x - 2) + 3 * x * y
 
-  def f1(y: Int): Int =
-    2 * y
-\end{lstlisting}
-
+As an example consider Listing~\ref{lst:symbolic-computation} and its specialization with a known input of \texttt{x = 1}.
+The partial evaluator could do sparse constant propagation to replace all occurrences of \texttt{y} within the branch with \texttt{0}, since this is the only case, the branch is taken.
+Then it could eliminate the addition of \texttt{0} to the value of \texttt{x}, since \texttt{0} is the neutral element of addition and thus has no effect.
+Afterwards the whole branch could be eliminated, since its body has no effect and thus the branch is not necessary.
+Finally the expression \texttt{2 * x} could be reduced to the static value of \texttt{2}, since the value of \texttt{x} is known to be \texttt{1}.
 
 \subsubsection*{Unfolding Function Calls}
 
@@ -63,12 +74,14 @@ If applied without care, this scheme can result in infinite loops.
 While in this example it is possible to terminate the recursive unfolding if the condition within the recursive expression is evaluated, more complex functions are not guaranteed to terminate.
 This example also shows, that optimization schemes can be combined to yield even more optimized results, as the resulting expression could be reduced even further using constant folding.
 
+\newpage
+
 \begin{lstlisting}[language=scala,caption={Definition of the \texttt{factorial} function and its specialization.},label={lst:unfolding}]
   def factorial(n: Int): Int =
     if (n == 0) 1
     else n * factorial(n - 1)
 
-  def factorial3(): Int =
+  def factorial3(/* n is 3 */): Int =
     3 * (3 - 1) * (3 - 2) * 1
 \end{lstlisting}
 
@@ -78,21 +91,21 @@ This example also shows, that optimization schemes can be combined to yield even
 Program point specialization describes a technique to specialize functions as part of a larger program.
 Especially in larger programs, a function may be called multiple times with the same fixed partial inputs.
 Instead of generating a new function definition for each occurrence or unfolding every call, it may be preferred to extract a shared function definition to minimize code size.
-Listing~\ref{lst:pps} shows the specialization of Ackermann's function with the fixed input \texttt{n = 2} as an example, while also applying the previously mentioned optimization strategies.
+Listing~\ref{lst:pps} shows the specialization of Ackermann's function with the fixed input \texttt{m = 2} as an example, while also applying the previously mentioned optimization strategies.
 
 \begin{lstlisting}[language=scala,caption={Definition of the \texttt{ackermann} function and its specialization.},label={lst:pps}]
-  def ack(n: Int, m: Int): Int =
+  def ack(m: Int, n: Int): Int =
     if (m == 0) n + 1
-    else if (n == 0) a(m - 1, 1)
-    else a(m-1, a(m, n-1))
+    else if (n == 0) ack(m - 1, 1)
+    else ack(m-1, a(m, n-1))
 
-  def ack2(n: Int): Int =
+  def ack2(/* m is 2 */ n: Int): Int =
     if (n == 0) 3
-    else a1(a2(n - 1))
+    else ack1(ack2(n - 1))
 
-  def ack1(n: Int): Int =
+  def ack1(/* m is 1 */ n: Int): Int =
     if (n == 0) 2
-    else a1(n - 1)
+    else ack1(n - 1) + 1
 \end{lstlisting}
 
 
