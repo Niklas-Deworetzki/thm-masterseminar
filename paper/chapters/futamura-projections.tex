@@ -6,7 +6,7 @@ The specialized programs shown did not have any new or interesting properties, e
 
 In~\cite{Futamura_PECompilerCompiler}~Futamura showed, that it is not only possible to use partial evaluation for the specialization of programs or to divide a computation into multiple stages.
 He proposed in total three projections, now known as the Three Futamura Projections, in which partial evaluators create programs with interesting and seemingly new properties.
-In the meantime, these projections have been confirmed multiple times by existing partial evaluators.
+In the meantime, these projections have been confirmed multiple times using existing partial evaluators.
 
 Before elaborating on the projections, a new notation is introduced first.
 This notation is used to describe the behavior of programs and computations in multiple stages.
@@ -69,7 +69,7 @@ The second of Futamura's projections is based on the first.
 Looking at the second projection, it becomes clear that the same scheme can be applied again.
 The partial evaluator itself is a program that accepts two inputs: an interpreter and a source program.
 
-So for the second projection, a partial evaluator is used, to create another stage of computation, abstract away the source as an input parameter.
+So for the second projection, a partial evaluator is used to create another stage of computation and to abstract away the source as an input parameter.
 The following equation describes a partial evaluator that is used to specialize a partial evaluator with respect to an interpreter.
 
 \begin{align}
@@ -100,7 +100,7 @@ The following equation describes a partial evaluator that is used to specialize 
 
 The residual program created in the third Futamura Projection in equation~(\ref{eqn:pe-fut-3}) is a program that can generate a compiler.
 This program is a compiler generator, that accepts the description of a language's semantic to generate a standalone compiler.
-The description is passed as an interpreter, which decides the behavior of the generated compiler.
+The description is passed as an interpreter, which represents syntax and semantic of the programming language and thus determines the behavior of the generated compiler.
 
 
 \subsection{Is there a Fourth Futamura Projection?}\label{sec:futamura-fourth}
@@ -125,7 +125,7 @@ The following equations show further applications of this scheme, while the part
 While no new functionality or properties arise from further application of the above scheme, it may still be desirable to further apply partial evaluation.
 The key insight is, that there are multiple ways to create a program with some specific behavior.
 But while these programs behave equally on a theoretical level as it is shown in equations, there are differences in practice.
-As it was shown with existing implementations, it is possible to gain significant speed-ups of a program, if a \enquote{specialized} compiler or compiler-generator was used.
+Tests with existing implementations lead to the conclusion, that it is possible to gain  significant speed-ups, if a compiler or compiler-generator resulting from specialization is used instead of directly using a partial evaluator.
 
 Another interesting property, that becomes clear through Futamura's projections is the relationship between programs and their generating extension~\cite{Glueck_FourthProjection}.
 A generating extension of a program $p$ is a program $\mathtt{pe}_p$ that accepts an input $i$ to produce a version of $p$ that is specialized with respect to $i$.

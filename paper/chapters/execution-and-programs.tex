@@ -39,16 +39,16 @@ Even if a program gets more complex, accepting many different inputs and produci
 The figure, even if useful as an introduction, does not correctly represent reality in most cases.
 Usually, a program written by a programmer is not executable directly on a computer and the help of other programs is required to transform the raw source code into an executable format.
 These programs are so-called meta-programs, as the datasets they work on are programs as well.
-In the context of this work, we will come into contact with three different meta-programs that are used for the execution of other programs, namely interpreters, compilers and partial evaluators.
-While interpreters and compilers are usually familiar, the concept of a partial evaluator often seems foreign.
-To put this concept in a better perspective, we will start with a brief description of interpreters and compilers before partial evaluators are finally introduced.
+In the context of this work, three different meta-programs are presented, that are used to aid execution of other programs; namely interpreters, compilers and partial evaluators.
+While the concepts of interpreters and compilers are widespread and well known, the concept of a partial evaluator seems foreign to most programmers.
+To put it into a better perspective, we will start with a brief description of interpreters and compilers before partial evaluators are introduced.
 
 
 \subsection{Interpreters}
 
-Interpreters, as already mentioned are meta-programs that are used to execute other programs.
+Interpreters, as already mentioned, are meta-programs that are used to execute other programs.
 An interpreter accepts the program, which is to be executed, as an input and analyzes it, whereby it is usually transformed into an intermediate representation.
-This tree-like structure mirrors the structure and contents of the source program.
+This tree-like data structure mirrors the structure and contents of the source program.
 By assigning meaning to every node of this tree, a program becomes executable, as the tree can be traversed with the interpreter performing actions corresponding to the meaning of each node.
 
 Now, given that the interpreter is executable, all programs written in a language the interpreter can \enquote{understand} are executable too.
@@ -88,8 +88,8 @@ On the downside, execution via an interpreter provides less performance, as inte
 
 \subsection{Compilers}
 
-Compilers, similar to interpreters, are programs that are used to transform other programs.
-While an interpreter uses the intermediate representation of a program to directly executed the assigned meaning to it, a compiler translates the meaning into another language.
+Compilers, similar to interpreters, are programs that are used to transform and execute other programs.
+While an interpreter uses the intermediate representation of a program to directly executed the meaning assigned to it, a compiler translates this meaning into another language.
 As a result, a compiler produces a single output, which is the so-called target program.
 This program holds the meaning of the compiler's input~--~the source program~--~translated into another language.
 As seen in Figure~\ref{fig:compiled-program}, an additional stage of computation is introduced this way.
@@ -97,7 +97,7 @@ The target program has to be executed for it to accept inputs and produce an out
 
 As already apparent visually, the translation process of a compiler is more complex than the process of an interpreter.
 But since the input program has to be only analyzed once and the target program is executed as a standalone program, compilation usually provides better performance in contrast to interpretation.
-This is especially true if the same program is executed multiple times since no computational overhead is present during the execution of the target program after it has been created once.
+This is especially true if the same program is executed multiple times, since no computational overhead is present during the execution of the target program after it has been created once.
 
 \begin{figure}
   \centering
@@ -165,7 +165,7 @@ These remaining computations form a so-called residual program, the output of a 
 While Figure~\ref{fig:partial-evaluated-program}, describing a partial evaluator, is structurally similar to Figure~\ref{fig:compiled-program} describing a compiler, the concept is generalized.
 A compiler only splits the overhead of analysis and the actual computation into different computational stages.
 A partial evaluator can split calculations depending on different inputs into different computational stages.
-This way, a general program accepting multiple inputs can be specialized to a fixed input, which usually leads to higher performance, since the overhead of recognizing inputs is removed.
+This way, a general program accepting multiple inputs can be specialized with respect to a fixed input, which usually leads to higher performance since the overhead of recognizing inputs is removed.
 
 
 

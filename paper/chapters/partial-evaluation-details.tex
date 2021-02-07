@@ -5,21 +5,21 @@ In this chapter, we dive deeper into the inner workings and implementation detai
 The previous chapters already covered the operational mode of partial evaluators on a larger scale.
 Thus, we already know that a partial evaluator accepts a source program as well as some fixed inputs to the source program as its own input and produces a residual output consisting of computations that cannot be evaluated under the given static input.
 
-During specialization a partial evaluator will analyze the components of a program, that represent computations.
+During specialization, a partial evaluator will analyze the components of a program that represent computations.
 While the specific components are dependent on the programming language used for the input program, a partial evaluator will usually work on expressions and statements, as well as the definitions accompanying them.
 Consequently a partial evaluator manages information about known names (such as the fixed inputs) and transforms the present components during specialization.
-This way, redundant computations are removed or the structure of statements or expressions is simplified using the known information.
+This way, redundant computations are removed or the structure of statements or expressions is simplified.
 
 This chapter will give an overview of different methods, that can be used to perform computations given some static input.
 These methods act as instruments for a partial evaluator, to optimize a program during specialization.
-Afterwards it is explained, how a partial evaluator can decide, which computations can be performed statically and which have to be present in the residual program.
+Afterwards it is explained, how a partial evaluator can decide, which computations can be performed statically and which have to be included as part of the residual program.
 
 
 \subsection{Instruments of Partial Evaluation}\label{sec:pe-instruments}
 
 In the following, we will see different techniques that allow partial evaluators to perform computations if they depend on (at least some) static values.
 Since a partial evaluator can only work on the statically known information, most techniques are based on the propagation of statically known information or the removal of redundant computations.
-\cite[Chap. 1]{Jones_PartialEvaluation}~mentions three main techniques, which are discussed further next: symbolic computation, unfolding of function calls and program point specialization.
+\cite[Chap. 1]{Jones_PartialEvaluation}~mentions three main techniques, which are discussed further: symbolic computation, unfolding of function calls and program point specialization.
 
 \subsubsection*{Symbolic Computation}
 
@@ -56,7 +56,7 @@ Symbolic computation presents a powerful technique, since it is not only possibl
 
 
 As an example consider Listing~\ref{lst:symbolic-computation} and its specialization with a known input of \texttt{x = 1}.
-The partial evaluator could do sparse constant propagation to replace all occurrences of \texttt{y} within the branch with \texttt{0}, since this is the only case, the branch is taken.
+The partial evaluator could do sparse constant propagation to replace all occurrences of \texttt{y} within the branch with \texttt{0}, since this is the condition, under which the branch is taken.
 Then it could eliminate the addition of \texttt{0} to the value of \texttt{x}, since \texttt{0} is the neutral element of addition and thus has no effect.
 Afterwards the whole branch could be eliminated, since its body has no effect and thus the branch is not necessary.
 Finally the expression \texttt{2 * x} could be reduced to the static value of \texttt{2}, since the value of \texttt{x} is known to be \texttt{1}.
@@ -72,7 +72,7 @@ This introduces another recursive call with parameter \texttt{(n - 2)}, which un
 
 If applied without care, this scheme can result in infinite loops.
 While in this example it is possible to terminate the recursive unfolding if the condition within the recursive expression is evaluated, more complex functions are not guaranteed to terminate.
-This example also shows, that optimization schemes can be combined to yield even more optimized results, as the resulting expression could be reduced even further using constant folding.
+This example also shows, that optimization schemes can be combined to yield even further optimized results, as the resulting expression could be reduced using constant folding.
 
 \newpage
 
@@ -88,10 +88,11 @@ This example also shows, that optimization schemes can be combined to yield even
 
 \subsubsection*{Program Point Specialization}
 
-Program point specialization describes a technique to specialize functions as part of a larger program.
-Especially in larger programs, a function may be called multiple times with the same fixed partial inputs.
-Instead of generating a new function definition for each occurrence or unfolding every call, it may be preferred to extract a shared function definition to minimize code size.
+Program point specialization describes a technique to specialize functions, procedures or a group statements.
+Especially in larger programs, a set of instructions may be encountered with the same fixed input values or under the same environment.
+Instead of generating a new definition for each occurrence, it may be preferred to extract a shared definition to minimize code size.
 Listing~\ref{lst:pps} shows the specialization of Ackermann's function with the fixed input \texttt{m = 2} as an example, while also applying the previously mentioned optimization strategies.
+Program point specialization allows the creation of many specialized function definitions that are shared between these definitions.
 
 \begin{lstlisting}[language=scala,caption={Definition of the \texttt{ackermann} function and its specialization.},label={lst:pps}]
   def ack(m: Int, n: Int): Int =
@@ -113,27 +114,27 @@ Listing~\ref{lst:pps} shows the specialization of Ackermann's function with the 
 \subsection{Offline and Online Partial Evaluation}\label{sec:offline-vs-online}
 
 As it was shown, a partial evaluator has to differentiate between static and dynamic parts of a program.
-If some expression or statement only depends on static data, the computation represented by these elements is static too and can be performed during evaluation.
+If some expression or statement only depends on static data, the computation represented by these elements is static too and can be performed statically.
 On the other hand it is possible, that some parts may depend on input data that is only known at runtime.
-In this case, it specialization is not always possible and the computations have to be included in the residual program.
+In this case, specialization is not always possible and computations have to be included in the residual program.
 
 To properly perform the specialization, a partial evaluator must divide all parts of the input program into either static or dynamic computations.
 The way this division is made is the key difference between the two main variants of partial evaluators.
 This variants differentiate between \textit{online} and \textit{offline} partial evaluation, each of which has its own advantages and disadvantages.
 
 \paragraph{Offline Partial Evaluation}
-depends on annotations in the source code in order to\linebreak decide, whether a computation can be performed during specialization or has to be generated as part of the residual program.
+depends on annotations in the source code in order to\linebreak decide, whether a computation can be performed during specialization or has to be included as part of the residual program.
 These annotations can either be provided by the programmer or are inserted automatically during a preprocessing phase of specialization.
-During so-called binding-time analysis, the program is analyzed and annotations are propagated.
+During this so-called binding-time analysis, the program is analyzed and annotations are propagated or inserted.
 This way of dividing a source program is usually rather conservative.
 Annotations are only based on the knowledge of what input variables are fixed and without knowledge of the inputs values~\cite[Chap. 7]{Jones_PartialEvaluation}.
-After the division is complete, all computations annotated as static are performed, while those annotated as dynamic are generated as part of the residual program.
+After the division is complete, all computations annotated as static are performed, while those annotated as dynamic are included as part of the residual program.
 
 
 \paragraph{Online Partial Evaluation}
 is more of an \enquote{on the fly}-approach to partial evaluation.
 The division between static and dynamic is made during specialization when expressions or statements are encountered in an online partial evaluator.
-This way, partial evaluation is more complex, since the overhead of creating a division is not factored out as a separate preprocessing step~\cite{Cook_TutorialOnlinePartialEvaluation}.
+Partial evaluation is more complex this way, since the overhead of creating a division is not factored out as a separate preprocessing step~\cite{Cook_TutorialOnlinePartialEvaluation}.
 Consequently, it is harder to predict the speedup online partial evaluation can achieve.
 During traversal of the source program, an online partial evaluator has information about the values of different inputs, variables and expressions and thus can often perform more optimizations compared to an offline evaluator.
 On the other hand, a (recursive) definition could be encountered many times leading to many or potentially infinite versions of it known to the evaluator.

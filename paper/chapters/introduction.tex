@@ -25,8 +25,8 @@ The arguably most important part of this topic is the partial evaluator itself, 
 Since the act of partial evaluation is also referred to as the specialization of programs, a partial evaluator is also called a specializer.
 Another occasionally used name is Mix since it mixes different computations (see Chapter~\ref{chap:programs}).
 
-In the following chapters, the terminology used to describe partial evaluation may sometimes be imprecise, since strictly speaking partial evaluation deals with the specialization of programs and not single functions.
-As it is possible to convert a function into a program executing only this single function, this imprecision is accepted in the remainder of this work to promote readability and brevity.
+In the following chapters, the terminology used to describe partial evaluation may sometimes be imprecise, since strictly speaking partial evaluation deals with the specialization of programs and not single constructs such as functions, procedures or single expressions.
+As it is possible to convert any of these constructs into a program executing only said construct, this imprecision is accepted in the remainder of this work to promote readability and brevity.
 
 In a similar sense, some details exist in the application and implementation of partial evaluators that are not discussed here, as they do not necessarily aid tangibility.
 Partial evaluators are limited to their implementation, source and target language, similar to compilers, which can not be used for any program and programming language.
@@ -38,7 +38,7 @@ In a real-world application, this assumption may not always be correct and must 
 This work is separated into four main chapters, highlighting different topics on partial evaluation.
 First of all, in Chapter~\ref{chap:programs} different execution strategies are presented and partial evaluation is classified with respect to them.
 The second topic presented in Chapter~\ref{sec:partial-evaluation} deals with the inner workings of partial evaluation.
-Here are different strategies presented, that are partial evaluator can use to specialize programs.
+Here different strategies are presented, that a partial evaluator can use to specialize programs.
 Additionally, the differences between online and offline partial evaluation are explained.
 Chapter~\ref{sec:futamura} presents the Futamura Projections, which are a central scheme of partial evaluation, showing relations to compiler construction and interpretation.
 Finally, the last Chapter~\ref{sec:discussion} focuses on a critical assessment of the entire topic.
